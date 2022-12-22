@@ -4,6 +4,17 @@ let playerDeck = [];
 let dealerDeck = [];
 
 
+// TODO: remove this eventually
+let promptMsg = '';
+function log(txt) {
+    promptMsg += txt;
+}
+function getPromptMsg(txt = '') {
+    let temp = promptMsg + txt;
+    promptMsg = '';
+    return temp;
+}
+
 // selects a random element from a given array
 function randomElement(arr) {
     return arr[Math.floor(arr.length * Math.random())];
@@ -18,13 +29,12 @@ function compare(card1, card2) {
 
 // checks to see if either the player or dealer has the card
 function cardExists(card) {
-    return playerDeck.includes(card) || dealerDeck.includes(card);
-    // for (other of playerDeck.concat(dealerDeck)) {
-    //     if (compare(other, card)) {
-    //         return true;
-    //     }
-    // }
-    // return false;
+    for (other of playerDeck.concat(dealerDeck)) {
+        if (compare(other, card)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -44,16 +54,18 @@ function calculateMaxValue(deck) {
     let aceCount = 0;
 
     // adds up all card values, aces = 11
-    deck.forEach(card => {
-        total += Math.min(card.value, 10);
-        if (card.value === 1) {
-            total += 10;
+    for (card of deck) {
+        // log(`\n${JSON.stringify(card)}`);
+        if (card.value === 1) { // aces
+            total += 11;
             aceCount++;
+        } else {
+            total += Math.min(card.value, 10);
         }
-    });
+    }
 
     // if the deck busts, count aces as 1 one-at-a-time
-    while (total > 21 && aceCount > 0) {
+    while (aceCount > 0 && total > 21) {
         total -= 10;
         aceCount--;
     }
@@ -120,17 +132,13 @@ const GameState = {
 let state = GameState.RESET;
 
 function loop() {
-
-    // keep updated running totals
-    let playerTotal = calculateMaxValue(playerDeck);
-    let dealerTotal = calculateMaxValue(dealerDeck);
-
     let input;
 
     switch (state) {
 
         case GameState.RESET:
-            console.log('\n[NEW GAME]\n\n');
+            log('\n[NEW GAME]\n\n');
+            reshuffle();
 
             playerDeck.push(getRandomCard());
             playerDeck.push(getRandomCard());
@@ -138,31 +146,31 @@ function loop() {
             dealerDeck.push(getRandomCard());
             dealerDeck.push(getRandomCard());
 
-            console.log(`The dealer drew a ${stringifyCard(dealerDeck[0])}...\n`);
-            console.log('The dealer drew another card...\n');
+            log(`The dealer drew a ${stringifyCard(dealerDeck[0])}...\n`);
+            log('The dealer drew another card...\n');
 
             state = GameState.IDLE;
             break;
         
         
         case GameState.IDLE:
-            console.log('Your cards are:\n');
-            console.log(stringifyDeck(playerDeck, '\n\t- ', '\t- '));
+            log('\nYour cards are:\n');
+            log(stringifyDeck(playerDeck, '\n   - ', '   - '));
 
             if (calculateMaxValue(playerDeck) > 21) {
                 state = GameState.GAMEOVER;
                 break;
             }
 
-            input = prompt('What would you like to do? [1] Hit, [2] Stand, or [0] Leave: ');
+            input = prompt(getPromptMsg('\n\nWhat would you like to do? [1] Hit, [2] Stand, or [ESC] Leave: '));
             switch (input) {
-                case '1':
+                case '1': case '[1]':
                     state = GameState.HIT;
                     break;
-                case '2':
+                case '2': case '[2]':
                     state = GameState.STAND;
                     break;
-                case '0':
+                case 'ESC': case '[ESC]': case null:
                     state = GameState.LEAVE;
                     break;
             }
@@ -178,22 +186,26 @@ function loop() {
         case GameState.STAND:
             while (calculateMaxValue(dealerDeck) <= 16) {
                 dealerDeck.push(getRandomCard());
-                console.log(`The dealer drew a ${stringifyCard(dealerDeck[dealerDeck.length-1])}`);
+                log(`The dealer drew a ${stringifyCard(dealerDeck[dealerDeck.length-1])}...\n`);
             }
 
-            console.log('Your cards are:\n');
-            console.log(stringifyDeck(playerDeck, '\n\t- ', '\t- '));
-            console.log(`Total: ${playerTotal}`);
+            log('Your cards are:\n');
+            log(stringifyDeck(playerDeck, '\n   - ', '   - '));
+            log(`\nTotal: ${calculateMaxValue(playerDeck)}`);
 
-            console.log('Dealer\'s cards are:\n');
-            console.log(stringifyDeck(dealerDeck, '\n\t- ', '\t- '));
-            console.log(`Total: ${dealerTotal}`);
+            log('\n\nDealer\'s cards are:\n');
+            log(stringifyDeck(dealerDeck, '\n   - ', '   - '));
+            log(`\nTotal: ${calculateMaxValue(dealerDeck)}`);
 
             state = GameState.GAMEOVER;
             break;
         
         
         case GameState.GAMEOVER:
+
+            let playerTotal = calculateMaxValue(playerDeck);
+            let dealerTotal = calculateMaxValue(dealerDeck);
+
             let msg = 'Error: undefined winner';
             if (playerTotal > 21) {
                 msg = 'You busted, dealer wins!';
@@ -205,22 +217,18 @@ function loop() {
                 msg = 'The dealer wins!';
             }
 
-            console.log(msg);
-            input = prompt('Would you like to play again? [1] Yes, or [2] No: ');
-            switch (input) {
-                case '1':
-                    reshuffle();
-                    state = GameState.RESET;
-                    break;
-                case '2':
-                    state = GameState.LEAVE;
-                    break;
+            log('\n\n' + msg);
+            input = confirm(getPromptMsg('\n\nClick OK to play again'));
+            if (input) {
+                state = GameState.RESET;
+            } else {
+                state = GameState.LEAVE;
             }
             break;
 
         
         case GameState.LEAVE:
-            console.log('You left the table...');
+            log('You left the table...');
             return false;
         
     }
@@ -236,7 +244,7 @@ setTimeout(() => {
     while (repeat) {
         repeat = loop();
     }
-}, 5000);
+}, 1000);
 
 // for now it's just text-based, I plan on adding graphics soon!
 // end of line, friend
