@@ -1,7 +1,26 @@
-const FACES = ['Club', 'Diamond', 'Heart', 'Spade'];
+const SUITS = ['Club', 'Diamond', 'Heart', 'Spade'];
+const SUIT_CHARS = { Club: '♣', Diamond: '♦', Heart: '♥', Spade: '♠',};
 
 let playerDeck = [];
 let dealerDeck = [];
+
+
+// array to specify which card values use which spots
+suitLayouts = [
+    ['B3'], // A
+    ['B2', 'B4'], // 2
+    ['B1', 'B3', 'B5'], // 3
+    ['A1', 'A5', 'C1', 'C5'], // 4
+    ['A1', 'A5', 'B3', 'C1', 'C5'], // 5
+    ['A1', 'A3', 'A5', 'C1', 'C3', 'C5'], // 6
+    ['A1', 'A3', 'A5', 'B2', 'C1', 'C3', 'C5'], // 7
+    ['A1', 'A3', 'A5', 'B2', 'B4', 'C1', 'C3', 'C5'], // 8
+    ['A1', 'A2', 'A4', 'A5', 'B3', 'C1', 'C2', 'C4', 'C5'], // 9
+    ['A1', 'A2', 'A4', 'A5', 'B2', 'B4', 'C1', 'C2', 'C4', 'C5'], // 10
+    [], // J
+    [], // Q
+    [], // K
+]
 
 
 // TODO: remove this eventually
@@ -16,14 +35,14 @@ function getPromptMsg(txt = '') {
 }
 
 // selects a random element from a given array
-function randomElement(arr) {
+function pickRand(arr) {
     return arr[Math.floor(arr.length * Math.random())];
 }
 
 
 // returns true if the cards are the same
 function compare(card1, card2) {
-    return card1.face === card2.face && card1.value === card2.value;
+    return card1.suit === card2.suit && card1.value === card2.value;
 }
 
 
@@ -41,10 +60,74 @@ function cardExists(card) {
 // returns a new card that does not already exist
 function getRandomCard() {
     let output = {
-        face: randomElement(FACES),
-        value: Math.ceil(Math.random()*13)
+        suit: pickRand(SUITS),
+        value: Math.ceil(Math.random()*13),
     }
+    output.element = createCardDiv(output.suit, output.value);
+    // document.body.appendChild(output.element); // TODO debug line, remove
+
     return (cardExists(output) ? getRandomCard() : output);
+}
+getRandomCard();
+
+function createCardDiv(suit, value) {
+    const asciiSuit = SUIT_CHARS[suit];
+    const color = (suit === 'Spade' || suit === 'Club' ? '#000' : '#F00');
+
+    const cardDiv = document.createElement('div');
+    cardDiv.className = 'card';
+    cardDiv.style.color = color;
+
+    const front = document.createElement('div');
+    front.className = 'front';
+    cardDiv.appendChild(front);
+
+    let val = value;
+    switch(value) {
+        case 1: val = 'A'; break;
+        case 11: val = 'J'; break;
+        case 12: val = 'Q'; break;
+        case 13: val = 'K'; break;
+    }
+
+    // number and small suit in top left corner
+    const index = document.createElement('div');
+    index.className = 'card-index top-left';
+    index.textContent = `${val}\n${asciiSuit}`;
+    front.appendChild(index);
+
+    // bottom right index
+    const index2 = document.createElement('div');
+    index2.className = 'card-index bot-right';
+    index2.textContent = `${val}\n${asciiSuit}`;
+    front.appendChild(index2);
+
+    if (value === 1 || value > 10) {
+        const aceSuit = document.createElement('div');
+        aceSuit.className = 'ace';
+        aceSuit.textContent = asciiSuit;
+        front.appendChild(aceSuit);
+        switch (value) { // TODO the face cards
+            case 1:
+                break;
+            case 11:
+                break;
+            case 12:
+                break;
+            case 13:
+                break;
+        }
+        return cardDiv;
+    }
+
+    for (spot of suitLayouts[value-1]) {
+        const spotDiv = document.createElement('div');
+        spotDiv.className = `spot${spot}`;
+        spotDiv.textContent = asciiSuit;
+        front.appendChild(spotDiv);
+    }
+
+    return cardDiv;
 }
 
 
@@ -98,7 +181,7 @@ function stringifyCard(card) {
             value = 'King';
             break;
     }
-    return `${value} of ${card.face}s`;
+    return `${value} of ${card.suit}s`;
 }
 
 
@@ -239,12 +322,9 @@ function loop() {
 
 // a little hack to allow us to read the console inputs
 
-setTimeout(() => {
-    let repeat = true;
-    while (repeat) {
-        repeat = loop();
-    }
-}, 1000);
-
+// let repeat = true;
+// while (repeat) {
+//     repeat = loop();
+// }
 // for now it's just text-based, I plan on adding graphics soon!
 // end of line, friend
