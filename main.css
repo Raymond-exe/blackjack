@@ -1,3 +1,8 @@
+/* resources used: */
+/* CSS playing cards: http://www.brainjar.com/css/cards */
+/* SVG face card designs: edited from https://tekeye.uk/playing_cards/svg-playing-cards */
+/* card flipping: https://www.w3schools.com/howto/howto_css_flip_card.asp */
+
 body {
     background-color: #222;
     text-align: center;
@@ -8,8 +13,6 @@ h1, p {
 }
 
 .card {
-    border-radius: 0.35em;
-    background-color: #fff;
     font-size: 40pt;
     position: absolute;
     width:  4em;
@@ -36,9 +39,35 @@ h1, p {
 }
 
 .front {
-    position: absolute;
+    border-radius: 0.35em;
+    background-color: #fff;
+    position: relative;
     width: 100%;
     height: 100%;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+}
+
+.card:hover .front {
+    transform: rotateY(180deg)
+}
+
+.cardback {
+    border-radius: 0.35em;
+    background-color: #fff;
+    background-image: url('./images/back.png');
+    image-rendering: pixelated;
+    transform: rotateY(180deg);
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+    position: absolute;
+    width:  100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 
@@ -60,9 +89,7 @@ h1, p {
 .spotC4 { position: absolute; left: 2.45em; top: 2.5em; }
 .spotC5 { position: absolute; left: 2.45em; top: 3.5em; }
 
-.ace {
-    font-size: 200%;
-    position: absolute;
-    left: 0.5em;
-    top:  0.65em;
-}
+.ace    { position: absolute; left: 0.50em; top: 0.65em; font-size: 200%; }
+.jack   { position: absolute; }
+.queen  { position: absolute; }
+.king   { position: absolute; }
