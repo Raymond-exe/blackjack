@@ -68,11 +68,10 @@ function getRandomCard() {
 
     return (cardExists(output) ? getRandomCard() : output);
 }
-getRandomCard();
 
 function createCardDiv(suit, value) {
     const asciiSuit = SUIT_CHARS[suit];
-    const color = (suit === 'Spade' || suit === 'Club' ? '#000' : '#F00');
+    const color = (suit === 'Spade' || suit === 'Club' ? 'BLACK' : 'RED');
 
     const cardDiv = document.createElement('div');
     cardDiv.className = 'card';
@@ -81,6 +80,11 @@ function createCardDiv(suit, value) {
     const front = document.createElement('div');
     front.className = 'front';
     cardDiv.appendChild(front);
+    cardDiv.front = front;
+
+    const back = document.createElement('div');
+    back.className = 'cardback';
+    front.appendChild(back);
 
     let val = value;
     switch(value) {
@@ -320,11 +324,55 @@ function loop() {
 }
 
 
-// a little hack to allow us to read the console inputs
 
-// let repeat = true;
-// while (repeat) {
-//     repeat = loop();
-// }
-// for now it's just text-based, I plan on adding graphics soon!
-// end of line, friend
+
+/* ======================================== */
+/*	           WINDOW FUNCTIONS             */
+/* ======================================== */
+
+function getCardFront(card) {
+    if (!card.front) {
+        card.front = card.element.getElementsByClassName('front')[0]
+    }
+    return card.front;
+}
+
+function hideCard(card) {
+    if (isShown(card)) {
+        getCardFront(card).className += ' hidden';
+    }
+}
+
+function showCard(card) {
+    if (isHidden(card)) {
+        getCardFront(card).classList.remove('hidden');
+    }
+}
+
+function isHidden(card) {
+    return getCardFront(card).classList.contains('hidden');
+}
+
+function isShown(card) {
+    return !isHidden(card);
+}
+
+
+const testCard = getRandomCard();
+hideCard(testCard);
+
+addEventListener('mousemove', (event) => {
+    let card;
+    if (event.target.classList.contains('front')) {
+        card = event.target.parentElement;
+    } else if (event.target.parentElement && event.target.parentElement.classList.contains('front')) {
+        card = event.target.parentElement.parentElement;
+    }
+    if (card) {
+        if (isHidden(card)) {
+            showCard(card);
+        } else {
+            hideCard(card);
+        }
+    }
+})

@@ -50,10 +50,6 @@ h1, p {
     backface-visibility: hidden;
 }
 
-.card:hover .front {
-    transform: rotateY(180deg)
-}
-
 .cardback {
     border-radius: 0.35em;
     background-color: #fff;
@@ -70,6 +66,9 @@ h1, p {
     background-position: center;
 }
 
+.hidden {
+    transform: rotateY(180deg)
+}
 
 /* card symbol spots */
 /* for more info see http://www.brainjar.com/css/cards */
