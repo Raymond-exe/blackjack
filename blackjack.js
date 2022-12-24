@@ -39,6 +39,10 @@ function pickRand(arr) {
     return arr[Math.floor(arr.length * Math.random())];
 }
 
+// returns a value between 'a' and 'b', scaled via 't'
+function lerp(a, b, t) {
+    return a*(1-t)+b*t
+}
 
 // returns true if the cards are the same
 function compare(card1, card2) {
@@ -58,80 +62,15 @@ function cardExists(card) {
 
 
 // returns a new card that does not already exist
-function getRandomCard() {
+function getRandomCard(parentElement = null) {
     let output = {
         suit: pickRand(SUITS),
         value: Math.ceil(Math.random()*13),
     }
     output.element = createCardDiv(output.suit, output.value);
-    // document.body.appendChild(output.element); // TODO debug line, remove
+    if (parentElement) parentElement.appendChild(output.element);
 
     return (cardExists(output) ? getRandomCard() : output);
-}
-
-function createCardDiv(suit, value) {
-    const asciiSuit = SUIT_CHARS[suit];
-    const color = (suit === 'Spade' || suit === 'Club' ? 'BLACK' : 'RED');
-
-    const cardDiv = document.createElement('div');
-    cardDiv.className = 'card';
-    cardDiv.style.color = color;
-
-    const front = document.createElement('div');
-    front.className = 'front';
-    cardDiv.appendChild(front);
-    cardDiv.front = front;
-
-    const back = document.createElement('div');
-    back.className = 'cardback';
-    front.appendChild(back);
-
-    let val = value;
-    switch(value) {
-        case 1: val = 'A'; break;
-        case 11: val = 'J'; break;
-        case 12: val = 'Q'; break;
-        case 13: val = 'K'; break;
-    }
-
-    // number and small suit in top left corner
-    const index = document.createElement('div');
-    index.className = 'card-index top-left';
-    index.textContent = `${val}\n${asciiSuit}`;
-    front.appendChild(index);
-
-    // bottom right index
-    const index2 = document.createElement('div');
-    index2.className = 'card-index bot-right';
-    index2.textContent = `${val}\n${asciiSuit}`;
-    front.appendChild(index2);
-
-    if (value === 1 || value > 10) {
-        const aceSuit = document.createElement('div');
-        aceSuit.className = 'ace';
-        aceSuit.textContent = asciiSuit;
-        front.appendChild(aceSuit);
-        switch (value) { // TODO the face cards
-            case 1:
-                break;
-            case 11:
-                break;
-            case 12:
-                break;
-            case 13:
-                break;
-        }
-        return cardDiv;
-    }
-
-    for (spot of suitLayouts[value-1]) {
-        const spotDiv = document.createElement('div');
-        spotDiv.className = `spot${spot}`;
-        spotDiv.textContent = asciiSuit;
-        front.appendChild(spotDiv);
-    }
-
-    return cardDiv;
 }
 
 
@@ -327,8 +266,93 @@ function loop() {
 
 
 /* ======================================== */
-/*	           WINDOW FUNCTIONS             */
+/*	            CARD FUNCTIONS              */
 /* ======================================== */
+
+function createPlayerDeck() {
+    const widths = getDeckWidths(playerDeck.length);
+    const height = screen.height*0.8;
+
+    const container = document.createElement('div');
+    container.className += ' card-container';
+
+
+    return container;
+}
+
+function updatePlayerDeck(container) {
+    const widths = getDeckWidths(playerDeck.length);
+}
+
+function createDealerDeck() {
+    const widths = getDeckWidths(dealerDeck.length);
+    const height = sceeen.height * 0.05;
+}
+
+function createCardDiv(suit, value) {
+    const asciiSuit = SUIT_CHARS[suit];
+    const color = (suit === 'Spade' || suit === 'Club' ? 'BLACK' : 'RED');
+
+    const cardDiv = document.createElement('div');
+    cardDiv.className = 'card';
+    cardDiv.style.color = color;
+
+    const front = document.createElement('div');
+    front.className = 'front';
+    cardDiv.appendChild(front);
+    cardDiv.front = front;
+
+    const back = document.createElement('div');
+    back.className = 'cardback';
+    front.appendChild(back);
+
+    let val = value;
+    switch(value) {
+        case 1: val = 'A'; break;
+        case 11: val = 'J'; break;
+        case 12: val = 'Q'; break;
+        case 13: val = 'K'; break;
+    }
+
+    // number and small suit in top left corner
+    const index = document.createElement('div');
+    index.className = 'card-index top-left';
+    index.textContent = `${val}\n${asciiSuit}`;
+    front.appendChild(index);
+
+    // bottom right index
+    const index2 = document.createElement('div');
+    index2.className = 'card-index bot-right';
+    index2.textContent = `${val}\n${asciiSuit}`;
+    front.appendChild(index2);
+
+    if (value === 1 || value > 10) {
+        const aceSuit = document.createElement('div');
+        aceSuit.className = 'ace';
+        aceSuit.textContent = asciiSuit;
+        front.appendChild(aceSuit);
+        switch (value) { // TODO the face cards
+            case 1:
+                break;
+            case 11:
+                break;
+            case 12:
+                break;
+            case 13:
+                break;
+        }
+        return cardDiv;
+    }
+
+    for (spot of suitLayouts[value-1]) {
+        const spotDiv = document.createElement('div');
+        spotDiv.className = `spot${spot}`;
+        spotDiv.textContent = asciiSuit;
+        front.appendChild(spotDiv);
+    }
+
+    return cardDiv;
+}
 
 function getCardFront(card) {
     if (!card.front) {
@@ -357,22 +381,48 @@ function isShown(card) {
     return !isHidden(card);
 }
 
+function getDeckWidths(cardSpots) {
+    const width = screen.width;
+    const left = Math.round(width * 0.25);
+    const right = Math.round(width * 0.5) + left;
 
-const testCard = getRandomCard();
-hideCard(testCard);
+    const cardSpacer = Math.round(width * 0.5 / cardSpots);
+    const cardLocations = [];
+    for (let i = 0; i < cardSpots; i++) {
+        cardLocations.push(left + i*cardSpacer);
+    }
 
-addEventListener('mousemove', (event) => {
+    return {
+        left: left,
+        right: right,
+        width: width * 0.5,
+        cardWidth: cardSpacer,
+        cardLocations: cardLocations,
+    }
+}
+
+
+// const playerDeckContainer = createPlayerDeck();
+// document.body.appendChild(playerDeckContainer);
+// const testCard = getRandomCard(playerDeckContainer);
+// playerDeck.push(testCard);
+
+addEventListener('mousedown', (event) => {
     let card;
-    if (event.target.classList.contains('front')) {
+
+    if (event.target.classList.contains('card')) {
+        card = event.target;
+    } else if (event.target.classList.contains('front')) {
         card = event.target.parentElement;
     } else if (event.target.parentElement && event.target.parentElement.classList.contains('front')) {
         card = event.target.parentElement.parentElement;
     }
-    if (card) {
-        if (isHidden(card)) {
-            showCard(card);
-        } else {
-            hideCard(card);
-        }
+
+    if (!card) return;
+
+    if (isHidden(card)) {
+        showCard(card);
+    } else {
+        hideCard(card);
     }
-})
+});

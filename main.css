@@ -14,9 +14,9 @@ h1, p {
 
 .card {
     font-size: 40pt;
-    position: absolute;
-    width:  4em;
-    height: 5.5em;
+    position: relative;
+    width: 100%;
+    height: 100%;
 }
 .card-index {
     font-size: 50%;
@@ -42,12 +42,13 @@ h1, p {
     border-radius: 0.35em;
     background-color: #fff;
     position: relative;
-    width: 100%;
-    height: 100%;
+    width: 4em;
+    height: 5.5em;
     transition: transform 0.8s;
     transform-style: preserve-3d;
     -webkit-backface-visibility: hidden; /* Safari */
     backface-visibility: hidden;
+    margin: 0 auto; /* horizontal centering */
 }
 
 .cardback {
@@ -68,6 +69,14 @@ h1, p {
 
 .hidden {
     transform: rotateY(180deg)
+}
+
+.card-container {
+    width: 100%;
+    height: auto;
+    margin: auto 0;
+    display: flex;
+    justify-content: center;
 }
 
 /* card symbol spots */
