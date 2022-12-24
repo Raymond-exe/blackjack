@@ -362,19 +362,19 @@ function getCardFront(card) {
 }
 
 function hideCard(card) {
-    if (isShown(card)) {
+    if (isShown(card) && !card.classList.contains('no-flip')) {
         getCardFront(card).className += ' hidden';
     }
 }
 
 function showCard(card) {
-    if (isHidden(card)) {
+    if (isHidden(card) && !card.classList.contains('no-flip')) {
         getCardFront(card).classList.remove('hidden');
     }
 }
 
 function isHidden(card) {
-    return getCardFront(card).classList.contains('hidden');
+    return card.classList.contains('no-flip') || getCardFront(card).classList.contains('hidden');
 }
 
 function isShown(card) {
