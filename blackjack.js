@@ -237,14 +237,130 @@ function loop() {
 }
 
 
+// TODO: remove after the pop-up version is gone
 // a little hack to allow us to read the console inputs
-
 setTimeout(() => {
     let repeat = true;
     while (repeat) {
         repeat = loop();
     }
 }, 1000);
+
+/* ======================================== */
+/*	            CARD FUNCTIONS              */
+/* ======================================== */
+
+function createPlayerDeck() {
+    const widths = getDeckWidths(playerDeck.length);
+    const height = screen.height*0.8;
+
+    const container = document.createElement('div');
+    container.className += ' card-container';
+
+
+    return container;
+}
+
+function updatePlayerDeck(container) {
+    const widths = getDeckWidths(playerDeck.length);
+}
+
+function createDealerDeck() {
+    const widths = getDeckWidths(dealerDeck.length);
+    const height = sceeen.height * 0.05;
+}
+
+function createCardDiv(suit, value) {
+    const asciiSuit = SUIT_CHARS[suit];
+    const color = (suit === 'Spade' || suit === 'Club' ? 'BLACK' : 'RED');
+
+    const cardDiv = document.createElement('div');
+    cardDiv.className = 'card';
+    cardDiv.style.color = color;
+
+    const front = document.createElement('div');
+    front.className = 'front';
+    cardDiv.appendChild(front);
+    cardDiv.front = front;
+
+    const back = document.createElement('div');
+    back.className = 'cardback';
+    front.appendChild(back);
+
+    let val = value;
+    switch(value) {
+        case 1: val = 'A'; break;
+        case 11: val = 'J'; break;
+        case 12: val = 'Q'; break;
+        case 13: val = 'K'; break;
+    }
+
+    // number and small suit in top left corner
+    const index = document.createElement('div');
+    index.className = 'card-index top-left';
+    index.textContent = `${val}\n${asciiSuit}`;
+    front.appendChild(index);
+
+    // bottom right index
+    const index2 = document.createElement('div');
+    index2.className = 'card-index bot-right';
+    index2.textContent = `${val}\n${asciiSuit}`;
+    front.appendChild(index2);
+
+    if (value === 1 || value > 10) {
+        const aceSuit = document.createElement('div');
+        aceSuit.className = 'ace';
+        aceSuit.textContent = asciiSuit;
+        front.appendChild(aceSuit);
+        switch (value) { // TODO the face cards
+            case 1:
+                break;
+            case 11:
+                break;
+            case 12:
+                break;
+            case 13:
+                break;
+        }
+        return cardDiv;
+    }
+
+    for (spot of suitLayouts[value-1]) {
+        const spotDiv = document.createElement('div');
+        spotDiv.className = `spot${spot}`;
+        spotDiv.textContent = asciiSuit;
+        front.appendChild(spotDiv);
+    }
+
+    return cardDiv;
+}
+
+function getCardFront(card) {
+    if (!card.front) {
+        card.front = card.element.getElementsByClassName('front')[0]
+    }
+    return card.front;
+}
+
+function hideCard(card) {
+    if (isShown(card) && !card.classList.contains('no-flip')) {
+        getCardFront(card).className += ' hidden';
+    }
+}
+
+function showCard(card) {
+    if (isHidden(card) && !card.classList.contains('no-flip')) {
+        getCardFront(card).classList.remove('hidden');
+    }
+}
+
+function isHidden(card) {
+    return card.classList.contains('no-flip') || getCardFront(card).classList.contains('hidden');
+}
+
+function isShown(card) {
+    return !isHidden(card);
+}
 
 // for now it's just text-based, I plan on adding graphics soon!
 // end of line, friend
