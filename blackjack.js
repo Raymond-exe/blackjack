@@ -184,11 +184,6 @@ function loop() {
             log('\nYour cards are:\n');
             log(stringifyDeck(playerDeck, '\n   - ', '   - '));
 
-            if (calculateMaxValue(playerDeck) > 21) {
-                state = GameState.GAMEOVER;
-                break;
-            }
-
             console.log(getPromptMsg('\n\nWhat would you like to do? [1] Hit, [2] Stand, or [ESC] Leave: '));
             stop = true;
             break;
@@ -202,10 +197,12 @@ function loop() {
 
         
         case GameState.STAND:
-            while (calculateMaxValue(dealerDeck) <= 16) {
+            if (calculateMaxValue(dealerDeck) <= 16) {
                 dealerDeck.push(getRandomCard());
                 updateDealerDeck();
                 log(`The dealer drew a ${stringifyCard(dealerDeck[dealerDeck.length-1])}...\n`);
+                setTimeout(loop, 750);
+                return;
             }
 
             log('Your cards are:\n');
@@ -264,8 +261,6 @@ function loop() {
 
 // TODO: on the update functions below, show a movement animation when a card is added
 function updatePlayerDeck(container = document.getElementById('player')) {
-    container.style.width = (15*playerDeck.length) + '%';
-
     for (let card of playerDeck) {
         if (!container.contains(card.element)) {
             hideCard(card);
@@ -426,8 +421,12 @@ setTimeout(() => {
 }, 1);
 function hitBtn() {
     if (active) {
-        state = GameState.HIT;
-        loop();
+        if (calculateMaxValue(playerDeck) > 21) {
+            console.log('You cannot hit once your deck has busted!');
+        } else {
+            state = GameState.HIT;
+            loop();
+        }
     }
 }
 function standBtn() {
