@@ -34,15 +34,18 @@ function getPromptMsg(txt = '') {
     return temp;
 }
 
+
 // selects a random element from a given array
 function pickRand(arr) {
     return arr[Math.floor(arr.length * Math.random())];
 }
 
+
 // returns a value between 'a' and 'b', scaled via 't'
 function lerp(a, b, t) {
     return a*(1-t)+b*t
 }
+
 
 // returns true if the cards are the same
 function compare(card1, card2) {
@@ -126,6 +129,7 @@ function stringifyCard(card) {
 }
 
 
+// repeats stringifyCard() (above) for a given array of cards
 function stringifyDeck(deck, separator = ', ', firstSeparator = '') {
     let output = '';
     let isFirst = true;
@@ -269,6 +273,8 @@ function updatePlayerDeck(container = document.getElementById('player')) {
     }
 }
 
+
+// adds cards from dealer's array of cards to div element
 function updateDealerDeck() {
     const dealerElement = document.getElementById('dealer');
     for (let i = 0; i < dealerDeck.length; i++) {
@@ -284,6 +290,8 @@ function updateDealerDeck() {
     }
 }
 
+
+// adds cards from player's array of cards to div element
 function revealDealerHand() {
     for (let i = 1; i < dealerDeck.length; i++) {
         setTimeout(() => {
@@ -295,6 +303,8 @@ function revealDealerHand() {
     }
 }
 
+
+// returns the location of the deck of cards relative to the window
 let deckLocation;
 function getDeckLocation() {
     if (!deckLocation) {
@@ -304,6 +314,8 @@ function getDeckLocation() {
     return deckLocation;
 }
 
+
+// creates a div element of a card with the given suit & value
 function createCardDiv(suit, value, hidden = false) {
     const asciiSuit = SUIT_CHARS[suit];
     const color = (suit === 'Spade' || suit === 'Club' ? 'BLACK' : 'RED');
@@ -369,6 +381,8 @@ function createCardDiv(suit, value, hidden = false) {
     return cardDiv;
 }
 
+
+// util function used to get the div containing all elements in the card
 function getCardFront(card) {
     if (!card.front) {
         card.front = card.element.getElementsByClassName('front')[0]
@@ -376,6 +390,8 @@ function getCardFront(card) {
     return card.front;
 }
 
+
+// flips the card to be face-down
 function hideCard(card) {
     card = (card.element ? card.element : card);
     if (isShown(card) && !card.classList.contains('no-flip')) {
@@ -383,6 +399,8 @@ function hideCard(card) {
     }
 }
 
+
+// flips the card to be face-up
 function showCard(card) {
     card = (card.element ? card.element : card);
     if (isHidden(card) && !card.classList.contains('no-flip')) {
@@ -390,16 +408,22 @@ function showCard(card) {
     }
 }
 
+
+// returns true if the card is face-down
 function isHidden(card) {
     card = (card.element ? card.element : card);
     return card.classList.contains('no-flip') || getCardFront(card).classList.contains('hidden');
 }
 
+
+// returns true if the card is face-up
 function isShown(card) {
     card = (card.element ? card.element : card);
     return !isHidden(card);
 }
 
+
+// returns {x, y} that an element should be updated to given the settings below
 function lerpMovement(element, to, lerpAlpha) {
     const {top, bottom, left, right} = element.getBoundingClientRect();
     const currentX = Math.round((left+right)/2.0);
@@ -412,6 +436,7 @@ function lerpMovement(element, to, lerpAlpha) {
     
     return {x: lerpX, y: lerpY};
 }
+
 
 // TODO: TEMP for testing phase
 let active = false;
