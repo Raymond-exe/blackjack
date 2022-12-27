@@ -105,6 +105,21 @@ function calculateMaxValue(deck) {
 function reshuffle() {
     playerDeck = [];
     dealerDeck = [];
+
+    const playerDeckElement = document.getElementById('player');
+    const dealerDeckElement = document.getElementById('dealer');
+
+    let child = playerDeckElement.firstChild;
+    while (child) {
+        playerDeckElement.removeChild(child);
+        child = playerDeckElement.firstChild;
+    }
+
+    child = dealerDeckElement.firstChild;
+    while (child) {
+        dealerDeckElement.removeChild(child);
+        child = dealerDeckElement.firstChild;
+    }
 }
 
 
@@ -242,7 +257,6 @@ function loop() {
             log('\n\n' + msg);
             console.log(getPromptMsg('\n\nClick OK to play again'));
             stop = true;
-            active = false;
             break;
 
         
@@ -439,13 +453,19 @@ function lerpMovement(element, to, lerpAlpha) {
 
 
 // TODO: TEMP for testing phase
-let active = false;
 setTimeout(() => {
     loop();
-    active = true;
 }, 1);
+
+let hit, stay, play;
+setTimeout(() => {
+    hit = document.getElementById('hitBtn');
+    stay = document.getElementById('stayBtn');
+    play = document.getElementById('playAgain');
+}, 5);
+
 function hitBtn() {
-    if (active) {
+    if (hit.style.opacity === '1') {
         if (calculateMaxValue(playerDeck) > 21) {
             console.log('You cannot hit once your deck has busted!');
         } else {
@@ -454,10 +474,52 @@ function hitBtn() {
         }
     }
 }
-function standBtn() {
-    if (active) {
+function stayBtn() {
+    if (stay.style.opacity === '1') {
         state = GameState.STAND;
         loop();
+        hideElement(stay, 250);
+        hideElement(hit, 250);
+        showElement(play, 250);
+    }
+}
+function playAgain() {
+    if (play.style.opacity === '1') {
+        // reactivate buttons
+        hideElement(play, 250);
+        showElement(stay, 250);
+        showElement(hit, 250);
+
+        state = GameState.RESET;
+        updateDealerDeck();
+        updatePlayerDeck();
+        loop();
+    }
+}
+
+// fades the element until it is invisible, over the given duration
+function hideElement(element, duration = 1000) {
+    const style = element.style;
+
+    if (element.tagName === 'BUTTON') { style.cursor = 'default'; }
+
+    for (let i = 100; i >= 0; i--) {
+        setTimeout(() => {
+            style.opacity = (i/100.0);
+        }, duration - (i*(duration/100.0)));
+    }
+}
+
+// fades the element until it is visible, over the given duration
+function showElement(element, duration = 1000) {
+    let style = element.style;
+
+    if (element.tagName === 'BUTTON') { setTimeout(() => style.cursor = 'pointer', duration); }
+
+    for (let i = 0; i <= 100; i++) {
+        setTimeout(() => {
+            style.opacity = (i/100.0);
+        }, i*(duration/100.0));
     }
 }
 

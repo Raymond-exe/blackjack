@@ -112,7 +112,13 @@ h1, p {
     top: 50%;
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
-  }
+}
+
+#movingCard {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+}
 
 /* card symbol spots */
 /* for more info see http://www.brainjar.com/css/cards */
@@ -198,3 +204,4 @@ h1, p {
 .btn:disabled {
   cursor: auto;
 }
+
