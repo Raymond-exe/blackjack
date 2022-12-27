@@ -205,16 +205,31 @@ function loop() {
             let playerTotal = calculateMaxValue(playerDeck);
             let dealerTotal = calculateMaxValue(dealerDeck);
 
-            let msg = 'Error: undefined winner';
+            let winMsg;
+            let subMsg;
             if (playerTotal > 21) {
-                msg = 'You busted, dealer wins!';
+                winMsg = 'The dealer wins!';
+                subMsg = `Your hand totaled to ${playerTotal}.`;
             } else if (dealerTotal > 21) {
-                msg = 'The dealer busted, you win!';
+                winMsg = 'You win!';
+                subMsg = `The dealer's hand totaled to ${dealerTotal}.`;
             } else if (playerTotal > dealerTotal) {
-                msg = 'You win!';
+                winMsg = 'You win!';
+                subMsg = `You held a ${playerTotal}, the dealer only had ${dealerTotal}.`;
+
+                if (playerTotal === 21 && playerDeck.length == 2) {
+                    winMsg = 'Blackjack!';
+                }
+            } else if (dealerTotal > playerTotal) {
+                winMsg = 'The dealer wins!';
+                subMsg = `The dealer held a ${dealerTotal}, while you only had ${playerTotal}.`;
             } else {
-                msg = 'The dealer wins!';
+                winMsg = 'Break even!';
+                subMsg = `Both you and the dealer had ${Math.max(dealerTotal, playerTotal)}.`
             }
+
+            setTitle(winMsg);
+            setSubtext(subMsg);
 
             revealDealerHand();
 
@@ -461,8 +476,8 @@ function hitBtn() {
 }
 function stayBtn() {
     if (stay.style.opacity === '1') {
-        hideIfVisible(title);
-        hideIfVisible(subtext);
+        hideIfVisible(title, 350);
+        hideIfVisible(subtext, 350);
         state = GameState.STAND;
         loop();
     }
@@ -473,6 +488,9 @@ function playAgain() {
         hideElement(play, 250);
         showElement(stay, 250);
         showElement(hit, 250);
+
+        hideIfVisible(title, 350);
+        hideIfVisible(subtext, 350);
 
         state = GameState.RESET;
         updateDealerDeck();
@@ -534,6 +552,7 @@ function hideIfVisible(element, duration = 1000) {
     }
 }
 
+// card flipping
 addEventListener('mousedown', (event) => {
     let card;
 
@@ -551,8 +570,10 @@ addEventListener('mousedown', (event) => {
     if (!card) return;
 
     // hide title & subtext if they are still shown
-    hideIfVisible(title);
-    hideIfVisible(subtext);
+    if (state !== GameState.GAMEOVER) {
+        hideIfVisible(title);
+        hideIfVisible(subtext);
+    }
 
     if (isHidden(card)) {
         showCard(card);
