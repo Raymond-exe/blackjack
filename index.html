@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Simple Blackjack</title>
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" type="text/css" href="main.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="mobile.css" media="handheld"/>
 </head>
 <body>
     <script src="./blackjack.js"></script>
@@ -22,6 +23,8 @@
         <div class="card no-flip" style="top:0.050em;left:0.050em"> <div class="front hidden"> <div class="cardback"></div> </div> </div>
         <div class="card no-flip" style="top:0.025em;left:0.025em"> <div class="front hidden"> <div class="cardback"></div> </div> </div>
       </div>
+      <h1 class="announcement vertical-center" id="title"   style="opacity:1;">Simple Blackjack!</h1>
+      <h1 class="announcement vertical-center" id="subtext" style="opacity:1;">To begin, click your cards below to reveal them.</h1>
       <button class="btn vertical-center" id="hitBtn"    style="opacity: 1; cursor: pointer;" onclick="hitBtn()">Hit</button>
       <button class="btn vertical-center" id="playAgain" style="opacity: 0; cursor: default;" onclick="playAgain()">Play Again</button>
       <button class="btn vertical-center" id="stayBtn"   style="opacity: 1; cursor: pointer;" onclick="stayBtn()">Stay</button>

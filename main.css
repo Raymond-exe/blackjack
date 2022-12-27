@@ -9,8 +9,21 @@ body {
     overflow: hidden;
 }
 
-h1, p {
-    color: #DEDEDE;
+.announcement {
+    position: fixed;
+    color: white;
+}
+
+#title {
+    top:3em;
+    font-size: 3.5em;
+    line-height: 0.25em;
+}
+
+#subtext {
+    line-height: 2em;
+    font-size: 2em;
+    font-weight: 100;
 }
 
 .card {
