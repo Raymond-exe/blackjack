@@ -23,6 +23,13 @@ suitLayouts = [
 ]
 
 
+// adapts the view for mobile devices
+if (screen.width < screen.height) {
+    console.log('Using mobile view...');
+    // TODO MOBILE VIEW LOL
+}
+
+
 // TODO: remove this eventually
 let promptMsg = '';
 function log(txt) {
