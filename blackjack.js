@@ -260,6 +260,10 @@ function loop() {
 
             revealDealerHand();
 
+            hideElement(stay, 250);
+            hideElement(hit, 250);
+            showElement(play, 250);
+
             log('\n\n' + msg);
             console.log(getPromptMsg('\n\nClick OK to play again'));
             stop = true;
@@ -283,6 +287,8 @@ function updatePlayerDeck(container = document.getElementById('player')) {
         if (!container.contains(card.element)) {
             hideCard(card);
             container.appendChild(card.element);
+            animateWidth(card.element, 3, 'em');
+            showElement(card.element, 100);
         }
     }
 }
@@ -295,12 +301,32 @@ function updateDealerDeck() {
         let card = dealerDeck[i];
         if (!dealerElement.contains(card.element)) {
             dealerElement.appendChild(card.element);
+            animateWidth(card.element, 3, 'em');
+            showElement(card.element, 100);
         }
         if (i == 0) {
             showCard(card);
         } else {
             hideCard(card);
         }
+    }
+}
+
+
+function animateWidth(element, expectedWidth = 100, unit = 'px') {
+    let currentWidth = 0;
+    element.style.width = 0;
+
+    lerpWidth();
+
+    function lerpWidth() {
+        currentWidth = lerp(currentWidth, expectedWidth, 0.05);
+        if (currentWidth < expectedWidth*0.999) {
+            setTimeout(lerpWidth, 10);
+        } else {
+            currentWidth = expectedWidth;
+        }
+        element.style.width = currentWidth + unit;
     }
 }
 
@@ -313,7 +339,7 @@ function revealDealerHand() {
             if (isHidden(card)) {
                 showCard(card);
             }
-        }, (i-1)*150);
+        }, (i-1)*200);
     }
 }
 
@@ -466,9 +492,12 @@ setTimeout(() => {
 
 function hitBtn() {
     if (hit.style.opacity === '1') {
-        if (calculateMaxValue(playerDeck) > 21) {
-            console.log('You cannot hit once your deck has busted!');
+        let val = calculateMaxValue(playerDeck);
+        if (val > 21) {
+            setSubtext(`You can't hit with ${val} in your hand!`);
         } else {
+            hideIfVisible(title);
+            hideIfVisible(subtext);
             state = GameState.HIT;
             loop();
         }
@@ -476,11 +505,10 @@ function hitBtn() {
 }
 function stayBtn() {
     if (stay.style.opacity === '1') {
+        hideIfVisible(title);
+        hideIfVisible(subtext);
         state = GameState.STAND;
         loop();
-        hideElement(stay, 250);
-        hideElement(hit, 250);
-        showElement(play, 250);
     }
 }
 function playAgain() {
@@ -494,6 +522,27 @@ function playAgain() {
         updateDealerDeck();
         updatePlayerDeck();
         loop();
+    }
+}
+
+let title, subtext;
+
+setTimeout(() => {
+    title = document.getElementById('title');
+    subtext = document.getElementById('subtext');
+}, 1);
+
+function setTitle(txt) {
+    title.textContent = txt;
+    showElement(title);
+}
+
+function setSubtext(txt, remainFor = 0) {
+    subtext.textContent = txt;
+    showElement(subtext);
+
+    if (remainFor) {
+        setTimeout(() => hideElement(subtext), remainFor);
     }
 }
 
@@ -523,8 +572,16 @@ function showElement(element, duration = 1000) {
     }
 }
 
+function hideIfVisible(element, duration = 1000) {
+    if (element.style.opacity === '1') {
+        hideElement(element, duration);
+    }
+}
+
 addEventListener('mousedown', (event) => {
     let card;
+
+    console.log(event.target.style.opacity);
 
     // only allow player to flip cards in their own hand
     if (!document.getElementById('player').contains(event.target)) return;
@@ -538,6 +595,10 @@ addEventListener('mousedown', (event) => {
     }
 
     if (!card) return;
+
+    // hide title & subtext if they are still shown
+    hideIfVisible(title);
+    hideIfVisible(subtext);
 
     if (isHidden(card)) {
         showCard(card);
