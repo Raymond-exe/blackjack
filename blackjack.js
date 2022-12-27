@@ -30,18 +30,6 @@ if (screen.width < screen.height) {
 }
 
 
-// TODO: remove this eventually
-let promptMsg = '';
-function log(txt) {
-    promptMsg += txt;
-}
-function getPromptMsg(txt = '') {
-    let temp = promptMsg + txt;
-    promptMsg = '';
-    return temp;
-}
-
-
 // selects a random element from a given array
 function pickRand(arr) {
     return arr[Math.floor(arr.length * Math.random())];
@@ -151,19 +139,6 @@ function stringifyCard(card) {
 }
 
 
-// repeats stringifyCard() (above) for a given array of cards
-function stringifyDeck(deck, separator = ', ', firstSeparator = '') {
-    let output = '';
-    let isFirst = true;
-    deck.forEach(card => {
-        output += (isFirst && firstSeparator ? firstSeparator : separator) + stringifyCard(card);
-        isFirst = false;
-    });
-    return output;
-}
-
-
-
 
 /* ======================================== */
 /*	          GAME STATE MACHINE            */
@@ -186,7 +161,6 @@ function loop() {
     switch (state) {
 
         case GameState.RESET:
-            log('\n[NEW GAME]\n\n');
             reshuffle();
 
             playerDeck.push(getRandomCard());
@@ -198,18 +172,11 @@ function loop() {
             updatePlayerDeck();
             updateDealerDeck();
 
-            log(`The dealer drew a ${stringifyCard(dealerDeck[0])}...\n`);
-            log('The dealer drew another card...\n');
-
             state = GameState.IDLE;
             break;
         
         
         case GameState.IDLE:
-            log('\nYour cards are:\n');
-            log(stringifyDeck(playerDeck, '\n   - ', '   - '));
-
-            console.log(getPromptMsg('\n\nWhat would you like to do? [1] Hit, [2] Stand, or [ESC] Leave: '));
             stop = true;
             break;
 
@@ -225,18 +192,9 @@ function loop() {
             if (calculateMaxValue(dealerDeck) <= 16) {
                 dealerDeck.push(getRandomCard());
                 updateDealerDeck();
-                log(`The dealer drew a ${stringifyCard(dealerDeck[dealerDeck.length-1])}...\n`);
                 setTimeout(loop, 750);
                 return;
             }
-
-            log('Your cards are:\n');
-            log(stringifyDeck(playerDeck, '\n   - ', '   - '));
-            log(`\nTotal: ${calculateMaxValue(playerDeck)}`);
-
-            log('\n\nDealer\'s cards are:\n');
-            log(stringifyDeck(dealerDeck, '\n   - ', '   - '));
-            log(`\nTotal: ${calculateMaxValue(dealerDeck)}`);
 
             state = GameState.GAMEOVER;
             break;
@@ -264,8 +222,6 @@ function loop() {
             hideElement(hit, 250);
             showElement(play, 250);
 
-            log('\n\n' + msg);
-            console.log(getPromptMsg('\n\nClick OK to play again'));
             stop = true;
             break;
     }
@@ -580,8 +536,6 @@ function hideIfVisible(element, duration = 1000) {
 
 addEventListener('mousedown', (event) => {
     let card;
-
-    console.log(event.target.style.opacity);
 
     // only allow player to flip cards in their own hand
     if (!document.getElementById('player').contains(event.target)) return;
