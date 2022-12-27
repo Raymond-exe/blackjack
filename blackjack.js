@@ -176,7 +176,6 @@ const GameState = {
     HIT:2,
     STAND:3,
     GAMEOVER:4,
-    LEAVE:5
 };
 
 let state = GameState.RESET;
@@ -265,12 +264,6 @@ function loop() {
             console.log(getPromptMsg('\n\nClick OK to play again'));
             stop = true;
             break;
-
-        
-        case GameState.LEAVE:
-            log('You left the table...');
-            return false;
-        
     }
 
     return (stop ? true : loop());
