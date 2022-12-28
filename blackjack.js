@@ -1,6 +1,6 @@
 const SUITS = ['Club', 'Diamond', 'Heart', 'Spade'];
 const SUIT_CHARS = { Club: '♣', Diamond: '♦', Heart: '♥', Spade: '♠',};
-// TODO stop mobile browsers from rendering SUIT_CHARS as emojis
+const NO_EMOJI = String.fromCodePoint(0xFE0F);
 
 let playerDeck = [];
 let dealerDeck = [];
@@ -343,7 +343,7 @@ function getDeckLocation() {
 
 // creates a div element of a card with the given suit & value
 function createCardDiv(suit, value, hidden = false) {
-    const asciiSuit = SUIT_CHARS[suit];
+    const asciiSuit = SUIT_CHARS[suit] + NO_EMOJI;
     const color = (suit === 'Spade' || suit === 'Club' ? 'BLACK' : 'RED');
 
     const cardDiv = document.createElement('div');
