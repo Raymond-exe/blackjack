@@ -244,7 +244,6 @@ function loop() {
             setSubtext(subMsg);
 
             revealHand(dealerDeck);
-            revealHand(playerDeck);
 
             hideElement(stay, 250);
             hideElement(hit, 250);
@@ -317,7 +316,7 @@ function animateWidth(element, expectedWidth = 100, unit = 'px') {
 
 // adds cards from player's array of cards to div element
 function revealHand(deck) {
-    for (let i = 1; i < deck.length; i++) {
+    for (let i = 0; i < deck.length; i++) {
         setTimeout(() => {
             let card = deck[i];
             if (isHidden(card)) {
@@ -602,6 +601,7 @@ addEventListener('mousedown', (event) => {
 
     if (state === GameState.IDLE && calculateMaxValue(playerDeck) > 21) {
         state = GameState.STAY;
+        revealHand(playerDeck);
         loop();
     }
 });
