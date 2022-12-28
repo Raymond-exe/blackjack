@@ -581,39 +581,19 @@ function isLandscape() {
 
 // card flipping
 addEventListener('mousedown', (event) => {
-    let card;
-
-    // only allow player to flip cards in their own hand
-    if (!document.getElementById('player').contains(event.target)) return;
-
-    if (event.target.classList.contains('card')) {
-        card = event.target;
-    } else if (event.target.classList.contains('front')) {
-        card = event.target.parentElement;
-    } else if (event.target.parentElement && event.target.parentElement.classList.contains('front')) {
-        card = event.target.parentElement.parentElement;
-    } else if (event.target === document.getElementById('player')) {
-        revealHand(playerDeck);
-        return;
-    }
-
-    if (!card) return;
-
-    // hide title & subtext if they are still shown
-    if (state !== GameState.GAMEOVER) {
-        hideIfVisible(title);
-        hideIfVisible(subtext);
-    }
-
-    if (isHidden(card)) {
-        showCard(card);
-    } else {
-        hideCard(card);
-    }
-
-    if (state === GameState.IDLE && calculateMaxValue(playerDeck) > 21) {
-        state = GameState.STAY;
-        revealHand(playerDeck);
-        loop();
+    for (let i = playerDeck.length-1; i >= 0; i--) {
+        let card = playerDeck[i];
+        const bounds = getCardFront(card.element).getBoundingClientRect();
+        if (
+            (event.clientX > bounds.left && event.clientX < bounds.right) &&
+            (event.clientY > bounds.top && event.clientY < bounds.bottom)
+        ) {
+            if (isShown(card)) {
+                hideCard(card);
+            } else {
+                showCard(card);
+            }
+            return;
+        }
     }
 });
