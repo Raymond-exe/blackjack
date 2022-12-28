@@ -26,6 +26,21 @@ body {
     font-weight: 100;
 }
 
+.score {
+    position: fixed;
+    font-size: 1.5em;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#dealerScore {
+    top: 9.75em;
+}
+
+#playerScore {
+    bottom: 7.25em;
+}
+
 .card {
     font-size: 2.5em;
     position: relative;
@@ -161,7 +176,7 @@ body {
 /* See: https://getcssscan.com/css-buttons-examples */
 .btn {
   appearance: button;
-  background-color: #d61818;
+  background-color: #aa1616;
   border: solid transparent;
   border-radius: 1em;
   border-width: 0 0 0.25em;

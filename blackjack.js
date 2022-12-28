@@ -3,6 +3,10 @@ const SUIT_CHARS = { Club: '♣', Diamond: '♦', Heart: '♥', Spade: '♠',};
 
 let playerDeck = [];
 let dealerDeck = [];
+const wins = {
+    player: 0,
+    dealer: 0,
+};
 
 
 // array to specify which card values use which spots
@@ -149,7 +153,7 @@ const GameState = {
     RESET:0,
     IDLE:1,
     HIT:2,
-    STAND:3,
+    STAY:3,
     GAMEOVER:4,
 };
 
@@ -172,11 +176,16 @@ function loop() {
             updatePlayerDeck();
             updateDealerDeck();
 
+            setTimeout(updateScores, 1);
+
             state = GameState.IDLE;
             break;
         
         
         case GameState.IDLE:
+
+            // TODO if player busted, automatically go to stay
+
             stop = true;
             break;
 
@@ -188,7 +197,7 @@ function loop() {
             break;
 
         
-        case GameState.STAND:
+        case GameState.STAY:
             if (calculateMaxValue(dealerDeck) <= 16) {
                 dealerDeck.push(getRandomCard());
                 updateDealerDeck();
@@ -210,12 +219,15 @@ function loop() {
             if (playerTotal > 21) {
                 winMsg = 'The dealer wins!';
                 subMsg = `Your hand totaled to ${playerTotal}.`;
+                wins.dealer++;
             } else if (dealerTotal > 21) {
                 winMsg = 'You win!';
                 subMsg = `The dealer's hand totaled to ${dealerTotal}.`;
+                wins.player++;
             } else if (playerTotal > dealerTotal) {
                 winMsg = 'You win!';
                 subMsg = `You held a ${playerTotal}, the dealer only had ${dealerTotal}.`;
+                wins.player++;
 
                 if (playerTotal === 21 && playerDeck.length == 2) {
                     winMsg = 'Blackjack!';
@@ -223,10 +235,12 @@ function loop() {
             } else if (dealerTotal > playerTotal) {
                 winMsg = 'The dealer wins!';
                 subMsg = `The dealer held a ${dealerTotal}, you only had ${playerTotal}.`;
+                wins.dealer++;
             } else {
                 winMsg = 'Break even!';
                 subMsg = `Both you and the dealer had ${Math.max(dealerTotal, playerTotal)}.`
             }
+            updateScores();
 
             setTitle(winMsg);
             setSubtext(subMsg);
@@ -478,7 +492,7 @@ function stayBtn() {
     if (stay.style.opacity === '1') {
         hideIfVisible(title, 350);
         hideIfVisible(subtext, 350);
-        state = GameState.STAND;
+        state = GameState.STAY;
         loop();
     }
 }
@@ -499,11 +513,13 @@ function playAgain() {
     }
 }
 
-let title, subtext;
+let title, subtext, playerScore, dealerScore;
 
 setTimeout(() => {
     title = document.getElementById('title');
     subtext = document.getElementById('subtext');
+    playerScore = document.getElementById('playerScore');
+    dealerScore = document.getElementById('dealerScore');
 }, 1);
 
 function setTitle(txt) {
@@ -518,6 +534,11 @@ function setSubtext(txt, remainFor = 0) {
     if (remainFor) {
         setTimeout(() => hideElement(subtext), remainFor);
     }
+}
+
+function updateScores() {
+    playerScore.textContent = `Your wins: ${wins.player}`;
+    dealerScore.textContent = `Dealer's wins: ${wins.dealer}`;
 }
 
 // fades the element until it is invisible, over the given duration
