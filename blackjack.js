@@ -1,5 +1,6 @@
 const SUITS = ['Club', 'Diamond', 'Heart', 'Spade'];
 const SUIT_CHARS = { Club: '♣', Diamond: '♦', Heart: '♥', Spade: '♠',};
+// TODO stop mobile browsers from rendering SUIT_CHARS as emojis
 
 let playerDeck = [];
 let dealerDeck = [];
@@ -216,6 +217,10 @@ function loop() {
                 winMsg = 'You win!';
                 subMsg = `The dealer's hand totaled to ${dealerTotal}.`;
                 wins.player++;
+
+                if (playerTotal === 21 && playerDeck.length == 2) {
+                    winMsg = 'Blackjack!';
+                }
             } else if (playerTotal > dealerTotal) {
                 winMsg = 'You win!';
                 subMsg = `You held a ${playerTotal}, the dealer only had ${dealerTotal}.`;
