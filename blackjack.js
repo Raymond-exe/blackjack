@@ -265,12 +265,13 @@ function loop() {
 
 
 // TODO: on the update functions below, show a movement animation when a card is added
-function updatePlayerDeck(container = document.getElementById('player')) {
+function updatePlayerDeck() {
+    const playerElement = document.getElementById('player');
     for (let card of playerDeck) {
-        if (!container.contains(card.element)) {
+        if (!playerElement.contains(card.element)) {
             hideCard(card);
-            container.appendChild(card.element);
-            animateWidth(card.element, 3, 'em');
+            playerElement.appendChild(card.element);
+            animateWidth(card.element, isLandscape() ? 3 : 2, 'em');
             showElement(card.element, 100);
         }
     }
@@ -284,7 +285,7 @@ function updateDealerDeck() {
         let card = dealerDeck[i];
         if (!dealerElement.contains(card.element)) {
             dealerElement.appendChild(card.element);
-            animateWidth(card.element, 3, 'em');
+            animateWidth(card.element, isLandscape() ? 3 : 1.5, 'em');
             showElement(card.element, 100);
         }
         if (i == 0) {
@@ -483,6 +484,8 @@ function hitBtn() {
             state = GameState.HIT;
             loop();
         }
+    } else {
+        playAgain();
     }
 }
 function stayBtn() {
@@ -491,6 +494,8 @@ function stayBtn() {
         hideIfVisible(subtext, 350);
         state = GameState.STAY;
         loop();
+    } else {
+        playAgain();
     }
 }
 function playAgain() {
@@ -542,7 +547,7 @@ function updateScores() {
 function hideElement(element, duration = 1000) {
     const style = element.style;
 
-    if (element.tagName === 'BUTTON') { style.cursor = 'default'; }
+    // if (element.tagName === 'BUTTON') { style.cursor = 'default'; }
 
     for (let i = 100; i >= 0; i--) {
         setTimeout(() => {
@@ -570,9 +575,15 @@ function hideIfVisible(element, duration = 1000) {
     }
 }
 
+function isLandscape() {
+    return window.innerHeight < window.innerWidth;
+}
+
 // card flipping
 addEventListener('mousedown', (event) => {
     let card;
+
+    console.log(event.target);
 
     // only allow player to flip cards in their own hand
     if (!document.getElementById('player').contains(event.target)) return;
