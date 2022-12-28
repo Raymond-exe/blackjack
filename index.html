@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Simple Blackjack</title>
-    <link rel="stylesheet" type="text/css" href="main.css" media="screen"/>
-    <link rel="stylesheet" type="text/css" href="mobile.css" media="handheld"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans">
+    <link rel="stylesheet" type="text/css" href="main.css"/>
 </head>
 <body>
     <script src="./blackjack.js"></script>
@@ -25,9 +25,13 @@
       </div>
       <h1 class="announcement vertical-center" id="title"   style="opacity:1;">Simple Blackjack!</h1>
       <h1 class="announcement vertical-center" id="subtext" style="opacity:1;">To begin, click your cards below to reveal them.</h1>
-      <button class="btn vertical-center" id="hitBtn"    style="opacity: 1; cursor: pointer; padding-left: 1.35em; padding-right: 1.35em; letter-spacing: 0.1em;" onclick="hitBtn()">Hit</button>
-      <button class="btn vertical-center" id="playAgain" style="opacity: 0; cursor: default;" onclick="playAgain()">Play Again</button>
-      <button class="btn vertical-center" id="stayBtn"   style="opacity: 1; cursor: pointer;" onclick="stayBtn()">Stay</button>
+      <div style="position:absolute; width:fit-content; left:50%; bottom:-1.5em; transform:translateX(-50%);">
+        <button class="btn vertical-center" id="playAgain" onclick="playAgain()">Play Again</button>
+      </div>
+      <div style="position:absolute; width:fit-content; left:50%; bottom:6em; transform:translateX(-50%);">
+        <button class="btn" id="hitBtn"    style="opacity: 1; cursor: pointer; padding-left: 1.35em; padding-right: 1.35em; letter-spacing: 0.1em;" onclick="hitBtn()">Hit</button>
+        <button class="btn" id="stayBtn"   style="opacity: 1; cursor: pointer;" onclick="stayBtn()">Stay</button>
+      </div>
       <h1 class="announcement score" id="dealerScore">Dealer's wins: </h1>
       <h1 class="announcement score" id="playerScore">Your wins: </h1>
     </div>

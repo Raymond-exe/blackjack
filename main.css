@@ -7,6 +7,7 @@ body {
     background-color: #222;
     text-align: center;
     overflow: hidden;
+    font-family: "PT Sans", sans-serif;
 }
 
 .announcement {
@@ -14,39 +15,99 @@ body {
     color: white;
 }
 
-#title {
-    top:3em;
-    font-size: 3.5em;
-    line-height: 0.25em;
-}
-
-#subtext {
-    line-height: 2em;
-    font-size: 2em;
-    font-weight: 100;
-}
-
 .score {
-    position: fixed;
+    position: absolute;
     font-size: 1.5em;
+    font-weight: normal;
     left: 50%;
     transform: translateX(-50%);
 }
 
-#dealerScore {
-    top: 9.75em;
+@media screen and (orientation: portrait) {
+    .card {
+        font-size: 2em;
+        font-weight: bold;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform: translateX(-50%);
+    }
+
+    #dealerScore {
+        position: fixed;
+        top: 8em;
+    }
+
+    #playerScore {
+        bottom: 1em;
+    }
+
+    #title {
+        top:3em;
+        font-size: 2.5em;
+        line-height: 0.25em;
+    }
+    
+    #subtext {
+        line-height: 1em;
+        font-size: 1.5em;
+        font-weight: 100;
+        top: 7em;
+    }
+
+    .btn {
+        font-size: 1em;
+    }
+
+    #playAgain {
+        opacity: 0;
+        cursor: default;
+        bottom: 7.5em;
+    }
 }
 
-#playerScore {
-    bottom: 7.25em;
+@media screen and (orientation: landscape) {
+    .card {
+        font-size: 2.5em;
+        font-weight: bold;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform: translateX(-15%);
+    }
+
+    #dealerScore {
+        position: fixed;
+        top: 10em;
+    }
+
+    #playerScore {
+        bottom: 1em;
+    }
+
+    #title {
+        top:3em;
+        font-size: 3.5em;
+        line-height: 0.25em;
+    }
+    
+    #subtext {
+        line-height: 2em;
+        font-size: 2em;
+        font-weight: 100;
+    }
+
+    .btn {
+        font-size: 1.25em;
+    }
+
+    #playAgain {
+        opacity: 0;
+        cursor: default;
+        bottom:6em;
+    }
 }
 
-.card {
-    font-size: 2.5em;
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
 .card-index {
     font-size: 50%;
     font-weight: bold;
@@ -124,7 +185,8 @@ body {
 }
 
 #dealer {
-    top: 0%;
+    /* position: fixed; */
+    top: 0em;
 }
 
 #player {
@@ -156,23 +218,23 @@ body {
 
 /* card symbol spots */
 /* for more info see http://www.brainjar.com/css/cards */
-.spotA1 { position: absolute; left: 0.55em; top: 0.5em; }
-.spotA2 { position: absolute; left: 0.55em; top: 1.5em; }
-.spotA3 { position: absolute; left: 0.55em; top: 2.0em; }
-.spotA4 { position: absolute; left: 0.55em; top: 2.5em; }
-.spotA5 { position: absolute; left: 0.55em; top: 3.5em; }
-.spotB1 { position: absolute; left: 1.50em; top: 0.5em; }
-.spotB2 { position: absolute; left: 1.50em; top: 1.0em; }
-.spotB3 { position: absolute; left: 1.50em; top: 2.0em; }
-.spotB4 { position: absolute; left: 1.50em; top: 3.0em; }
-.spotB5 { position: absolute; left: 1.50em; top: 3.5em; }
-.spotC1 { position: absolute; left: 2.45em; top: 0.5em; }
-.spotC2 { position: absolute; left: 2.45em; top: 1.5em; }
-.spotC3 { position: absolute; left: 2.45em; top: 2.0em; }
-.spotC4 { position: absolute; left: 2.45em; top: 2.5em; }
-.spotC5 { position: absolute; left: 2.45em; top: 3.5em; }
+.spotA1 { position: absolute; left: 0.80em; top: 0.6em; }
+.spotA2 { position: absolute; left: 0.80em; top: 1.6em; }
+.spotA3 { position: absolute; left: 0.80em; top: 2.1em; }
+.spotA4 { position: absolute; left: 0.80em; top: 2.6em; }
+.spotA5 { position: absolute; left: 0.80em; top: 3.6em; }
+.spotB1 { position: absolute; left: 1.75em; top: 0.6em; }
+.spotB2 { position: absolute; left: 1.75em; top: 1.1em; }
+.spotB3 { position: absolute; left: 1.75em; top: 2.1em; }
+.spotB4 { position: absolute; left: 1.75em; top: 3.1em; }
+.spotB5 { position: absolute; left: 1.75em; top: 3.6em; }
+.spotC1 { position: absolute; left: 2.70em; top: 0.6em; }
+.spotC2 { position: absolute; left: 2.70em; top: 1.6em; }
+.spotC3 { position: absolute; left: 2.70em; top: 2.1em; }
+.spotC4 { position: absolute; left: 2.70em; top: 2.6em; }
+.spotC5 { position: absolute; left: 2.70em; top: 3.6em; }
 
-.ace    { position: absolute; left: 0.50em; top: 0.65em; font-size: 200%; }
+.ace    { position: absolute; left: 0.725em; top: 0.75em; font-size: 200%; }
 .jack   { position: absolute; }
 .queen  { position: absolute; }
 .king   { position: absolute; }
@@ -191,7 +253,6 @@ body {
   cursor: pointer;
   display: inline-block;
   font-family: din-round,sans-serif;
-  font-size: 1.25em;
   font-weight: 700;
   letter-spacing: 0.05em;
   line-height: 1.25em;
