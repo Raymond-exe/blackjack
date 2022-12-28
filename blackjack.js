@@ -184,8 +184,6 @@ function loop() {
         
         case GameState.IDLE:
 
-            // TODO if player busted, automatically go to stay
-
             stop = true;
             break;
 
@@ -245,7 +243,8 @@ function loop() {
             setTitle(winMsg);
             setSubtext(subMsg);
 
-            revealDealerHand();
+            revealHand(dealerDeck);
+            revealHand(playerDeck);
 
             hideElement(stay, 250);
             hideElement(hit, 250);
@@ -317,10 +316,10 @@ function animateWidth(element, expectedWidth = 100, unit = 'px') {
 
 
 // adds cards from player's array of cards to div element
-function revealDealerHand() {
-    for (let i = 1; i < dealerDeck.length; i++) {
+function revealHand(deck) {
+    for (let i = 1; i < deck.length; i++) {
         setTimeout(() => {
-            let card = dealerDeck[i];
+            let card = deck[i];
             if (isHidden(card)) {
                 showCard(card);
             }
@@ -463,7 +462,6 @@ function lerpMovement(element, to, lerpAlpha) {
 }
 
 
-// TODO: TEMP for testing phase
 setTimeout(() => {
     loop();
 }, 1);
@@ -479,7 +477,7 @@ function hitBtn() {
     if (hit.style.opacity === '1') {
         let val = calculateMaxValue(playerDeck);
         if (val > 21) {
-            setSubtext(`You can't hit with ${val} in your hand!`);
+            setSubtext('Reveal your new card before drawing another');
         } else {
             hideIfVisible(title);
             hideIfVisible(subtext);
@@ -600,5 +598,10 @@ addEventListener('mousedown', (event) => {
         showCard(card);
     } else {
         hideCard(card);
+    }
+
+    if (state === GameState.IDLE && calculateMaxValue(playerDeck) > 21) {
+        state = GameState.STAY;
+        loop();
     }
 });

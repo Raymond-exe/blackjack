@@ -106,6 +106,12 @@ body {
     position: absolute;
 }
 
+@media only screen and (max-width: 768px) {
+    #deck {
+        display: none;
+    }
+}
+
 .hand {
     position: fixed;
     width: 30%;
