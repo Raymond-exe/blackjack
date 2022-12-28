@@ -27,12 +27,6 @@ suitLayouts = [
 ]
 
 
-// adapts the view for mobile devices
-if (screen.width < screen.height) {
-    console.log('Using mobile view...');
-    // TODO MOBILE VIEW LOL
-}
-
 
 // selects a random element from a given array
 function pickRand(arr) {
@@ -281,15 +275,18 @@ function updatePlayerDeck() {
 // adds cards from dealer's array of cards to div element
 function updateDealerDeck() {
     const dealerElement = document.getElementById('dealer');
-    for (let i = 0; i < dealerDeck.length; i++) {
-        let card = dealerDeck[i];
+    let first = true;
+    for (let card of dealerDeck) {
         if (!dealerElement.contains(card.element)) {
+            hideCard(card);
             dealerElement.appendChild(card.element);
-            animateWidth(card.element, isLandscape() ? 3 : 1.5, 'em');
+            animateWidth(card.element, isLandscape() ? 3 : 2, 'em');
             showElement(card.element, 100);
         }
-        if (i == 0) {
+
+        if (first) {
             showCard(card);
+            first = false;
         } else {
             hideCard(card);
         }
@@ -509,8 +506,6 @@ function playAgain() {
         hideIfVisible(subtext, 350);
 
         state = GameState.RESET;
-        updateDealerDeck();
-        updatePlayerDeck();
         loop();
     }
 }
@@ -583,8 +578,6 @@ function isLandscape() {
 addEventListener('mousedown', (event) => {
     let card;
 
-    console.log(event.target);
-
     // only allow player to flip cards in their own hand
     if (!document.getElementById('player').contains(event.target)) return;
 
@@ -594,6 +587,9 @@ addEventListener('mousedown', (event) => {
         card = event.target.parentElement;
     } else if (event.target.parentElement && event.target.parentElement.classList.contains('front')) {
         card = event.target.parentElement.parentElement;
+    } else if (event.target === document.getElementById('player')) {
+        revealHand(playerDeck);
+        return;
     }
 
     if (!card) return;
