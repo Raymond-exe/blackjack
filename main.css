@@ -161,7 +161,7 @@ body {
 /* See: https://getcssscan.com/css-buttons-examples */
 .btn {
   appearance: button;
-  background-color: #1899D6;
+  background-color: #d61818;
   border: solid transparent;
   border-radius: 1em;
   border-width: 0 0 0.25em;
@@ -192,7 +192,7 @@ body {
 
 .btn:after {
   background-clip: padding-box;
-  background-color: #1CB0F6;
+  background-color: #ff0000;
   border: solid transparent;
   border-radius: 1em;
   border-width: 0 0 0.25em;

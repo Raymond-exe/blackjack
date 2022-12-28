@@ -222,7 +222,7 @@ function loop() {
                 }
             } else if (dealerTotal > playerTotal) {
                 winMsg = 'The dealer wins!';
-                subMsg = `The dealer held a ${dealerTotal}, while you only had ${playerTotal}.`;
+                subMsg = `The dealer held a ${dealerTotal}, you only had ${playerTotal}.`;
             } else {
                 winMsg = 'Break even!';
                 subMsg = `Both you and the dealer had ${Math.max(dealerTotal, playerTotal)}.`
