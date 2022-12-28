@@ -27,6 +27,7 @@ suitLayouts = [
 ]
 
 
+
 // selects a random element from a given array
 function pickRand(arr) {
     return arr[Math.floor(arr.length * Math.random())];
