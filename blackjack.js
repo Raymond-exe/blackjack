@@ -1,29 +1,54 @@
-const FACES = ['Club', 'Diamond', 'Heart', 'Spade'];
+const SUITS = ['Club', 'Diamond', 'Heart', 'Spade'];
+const SUIT_CHARS = { Club: '♣', Diamond: '♦', Heart: '♥', Spade: '♠',};
 
 let playerDeck = [];
 let dealerDeck = [];
+const wins = {
+    player: 0,
+    dealer: 0,
+};
 
 
-// TODO: remove this eventually
-let promptMsg = '';
-function log(txt) {
-    promptMsg += txt;
+// array to specify which card values use which spots
+suitLayouts = [
+    ['B3'], // A
+    ['B2', 'B4'], // 2
+    ['B1', 'B3', 'B5'], // 3
+    ['A1', 'A5', 'C1', 'C5'], // 4
+    ['A1', 'A5', 'B3', 'C1', 'C5'], // 5
+    ['A1', 'A3', 'A5', 'C1', 'C3', 'C5'], // 6
+    ['A1', 'A3', 'A5', 'B2', 'C1', 'C3', 'C5'], // 7
+    ['A1', 'A3', 'A5', 'B2', 'B4', 'C1', 'C3', 'C5'], // 8
+    ['A1', 'A2', 'A4', 'A5', 'B3', 'C1', 'C2', 'C4', 'C5'], // 9
+    ['A1', 'A2', 'A4', 'A5', 'B2', 'B4', 'C1', 'C2', 'C4', 'C5'], // 10
+    [], // J
+    [], // Q
+    [], // K
+]
+
+
+// adapts the view for mobile devices
+if (screen.width < screen.height) {
+    console.log('Using mobile view...');
+    // TODO MOBILE VIEW LOL
 }
-function getPromptMsg(txt = '') {
-    let temp = promptMsg + txt;
-    promptMsg = '';
-    return temp;
-}
+
 
 // selects a random element from a given array
-function randomElement(arr) {
+function pickRand(arr) {
     return arr[Math.floor(arr.length * Math.random())];
+}
+
+
+// returns a value between 'a' and 'b', scaled via 't'
+function lerp(a, b, t) {
+    return a*(1-t)+b*t
 }
 
 
 // returns true if the cards are the same
 function compare(card1, card2) {
-    return card1.face === card2.face && card1.value === card2.value;
+    return card1.suit === card2.suit && card1.value === card2.value;
 }
 
 
@@ -41,9 +66,11 @@ function cardExists(card) {
 // returns a new card that does not already exist
 function getRandomCard() {
     let output = {
-        face: randomElement(FACES),
-        value: Math.ceil(Math.random()*13)
+        suit: pickRand(SUITS),
+        value: Math.ceil(Math.random()*13),
     }
+    output.element = createCardDiv(output.suit, output.value);
+
     return (cardExists(output) ? getRandomCard() : output);
 }
 
@@ -55,7 +82,6 @@ function calculateMaxValue(deck) {
 
     // adds up all card values, aces = 11
     for (card of deck) {
-        // log(`\n${JSON.stringify(card)}`);
         if (card.value === 1) { // aces
             total += 11;
             aceCount++;
@@ -78,6 +104,21 @@ function calculateMaxValue(deck) {
 function reshuffle() {
     playerDeck = [];
     dealerDeck = [];
+
+    const playerDeckElement = document.getElementById('player');
+    const dealerDeckElement = document.getElementById('dealer');
+
+    let child = playerDeckElement.firstChild;
+    while (child) {
+        playerDeckElement.removeChild(child);
+        child = playerDeckElement.firstChild;
+    }
+
+    child = dealerDeckElement.firstChild;
+    while (child) {
+        dealerDeckElement.removeChild(child);
+        child = dealerDeckElement.firstChild;
+    }
 }
 
 
@@ -98,20 +139,8 @@ function stringifyCard(card) {
             value = 'King';
             break;
     }
-    return `${value} of ${card.face}s`;
+    return `${value} of ${card.suit}s`;
 }
-
-
-function stringifyDeck(deck, separator = ', ', firstSeparator = '') {
-    let output = '';
-    let isFirst = true;
-    deck.forEach(card => {
-        output += (isFirst && firstSeparator ? firstSeparator : separator) + stringifyCard(card);
-        isFirst = false;
-    });
-    return output;
-}
-
 
 
 
@@ -124,20 +153,18 @@ const GameState = {
     RESET:0,
     IDLE:1,
     HIT:2,
-    STAND:3,
+    STAY:3,
     GAMEOVER:4,
-    LEAVE:5
 };
 
 let state = GameState.RESET;
 
 function loop() {
-    let input;
+    let stop = false;
 
     switch (state) {
 
         case GameState.RESET:
-            log('\n[NEW GAME]\n\n');
             reshuffle();
 
             playerDeck.push(getRandomCard());
@@ -146,56 +173,35 @@ function loop() {
             dealerDeck.push(getRandomCard());
             dealerDeck.push(getRandomCard());
 
-            log(`The dealer drew a ${stringifyCard(dealerDeck[0])}...\n`);
-            log('The dealer drew another card...\n');
+            updatePlayerDeck();
+            updateDealerDeck();
+
+            setTimeout(updateScores, 1);
 
             state = GameState.IDLE;
             break;
         
         
         case GameState.IDLE:
-            log('\nYour cards are:\n');
-            log(stringifyDeck(playerDeck, '\n   - ', '   - '));
 
-            if (calculateMaxValue(playerDeck) > 21) {
-                state = GameState.GAMEOVER;
-                break;
-            }
-
-            input = prompt(getPromptMsg('\n\nWhat would you like to do? [1] Hit, [2] Stand, or [ESC] Leave: '));
-            switch (input) {
-                case '1': case '[1]':
-                    state = GameState.HIT;
-                    break;
-                case '2': case '[2]':
-                    state = GameState.STAND;
-                    break;
-                case 'ESC': case '[ESC]': case null:
-                    state = GameState.LEAVE;
-                    break;
-            }
+            stop = true;
             break;
 
 
         case GameState.HIT:
             playerDeck.push(getRandomCard());
+            updatePlayerDeck();
             state = GameState.IDLE;
             break;
 
         
-        case GameState.STAND:
-            while (calculateMaxValue(dealerDeck) <= 16) {
+        case GameState.STAY:
+            if (calculateMaxValue(dealerDeck) <= 16) {
                 dealerDeck.push(getRandomCard());
-                log(`The dealer drew a ${stringifyCard(dealerDeck[dealerDeck.length-1])}...\n`);
+                updateDealerDeck();
+                setTimeout(loop, 750);
+                return;
             }
-
-            log('Your cards are:\n');
-            log(stringifyDeck(playerDeck, '\n   - ', '   - '));
-            log(`\nTotal: ${calculateMaxValue(playerDeck)}`);
-
-            log('\n\nDealer\'s cards are:\n');
-            log(stringifyDeck(dealerDeck, '\n   - ', '   - '));
-            log(`\nTotal: ${calculateMaxValue(dealerDeck)}`);
 
             state = GameState.GAMEOVER;
             break;
@@ -206,76 +212,139 @@ function loop() {
             let playerTotal = calculateMaxValue(playerDeck);
             let dealerTotal = calculateMaxValue(dealerDeck);
 
-            let msg = 'Error: undefined winner';
+            let winMsg;
+            let subMsg;
             if (playerTotal > 21) {
-                msg = 'You busted, dealer wins!';
+                winMsg = 'The dealer wins!';
+                subMsg = `Your hand totaled to ${playerTotal}.`;
+                wins.dealer++;
             } else if (dealerTotal > 21) {
-                msg = 'The dealer busted, you win!';
+                winMsg = 'You win!';
+                subMsg = `The dealer's hand totaled to ${dealerTotal}.`;
+                wins.player++;
             } else if (playerTotal > dealerTotal) {
-                msg = 'You win!';
-            } else {
-                msg = 'The dealer wins!';
-            }
+                winMsg = 'You win!';
+                subMsg = `You held a ${playerTotal}, the dealer only had ${dealerTotal}.`;
+                wins.player++;
 
-            log('\n\n' + msg);
-            input = confirm(getPromptMsg('\n\nClick OK to play again'));
-            if (input) {
-                state = GameState.RESET;
+                if (playerTotal === 21 && playerDeck.length == 2) {
+                    winMsg = 'Blackjack!';
+                }
+            } else if (dealerTotal > playerTotal) {
+                winMsg = 'The dealer wins!';
+                subMsg = `The dealer held a ${dealerTotal}, you only had ${playerTotal}.`;
+                wins.dealer++;
             } else {
-                state = GameState.LEAVE;
+                winMsg = 'Break even!';
+                subMsg = `Both you and the dealer had ${Math.max(dealerTotal, playerTotal)}.`
             }
+            updateScores();
+
+            setTitle(winMsg);
+            setSubtext(subMsg);
+
+            revealHand(dealerDeck);
+
+            hideElement(stay, 250);
+            hideElement(hit, 250);
+            showElement(play, 250);
+
+            stop = true;
             break;
-
-        
-        case GameState.LEAVE:
-            log('You left the table...');
-            return false;
-        
     }
 
-    return true;
+    return (stop ? true : loop());
 }
 
 
-// TODO: remove after the pop-up version is gone
-// a little hack to allow us to read the console inputs
-setTimeout(() => {
-    let repeat = true;
-    while (repeat) {
-        repeat = loop();
-    }
-}, 1000);
+
 
 /* ======================================== */
 /*	            CARD FUNCTIONS              */
 /* ======================================== */
 
-function createPlayerDeck() {
-    const widths = getDeckWidths(playerDeck.length);
-    const height = screen.height*0.8;
 
-    const container = document.createElement('div');
-    container.className += ' card-container';
-
-
-    return container;
+// TODO: on the update functions below, show a movement animation when a card is added
+function updatePlayerDeck(container = document.getElementById('player')) {
+    for (let card of playerDeck) {
+        if (!container.contains(card.element)) {
+            hideCard(card);
+            container.appendChild(card.element);
+            animateWidth(card.element, 3, 'em');
+            showElement(card.element, 100);
+        }
+    }
 }
 
-function updatePlayerDeck(container) {
-    const widths = getDeckWidths(playerDeck.length);
+
+// adds cards from dealer's array of cards to div element
+function updateDealerDeck() {
+    const dealerElement = document.getElementById('dealer');
+    for (let i = 0; i < dealerDeck.length; i++) {
+        let card = dealerDeck[i];
+        if (!dealerElement.contains(card.element)) {
+            dealerElement.appendChild(card.element);
+            animateWidth(card.element, 3, 'em');
+            showElement(card.element, 100);
+        }
+        if (i == 0) {
+            showCard(card);
+        } else {
+            hideCard(card);
+        }
+    }
 }
 
-function createDealerDeck() {
-    const widths = getDeckWidths(dealerDeck.length);
-    const height = sceeen.height * 0.05;
+
+function animateWidth(element, expectedWidth = 100, unit = 'px') {
+    let currentWidth = 0;
+    element.style.width = 0;
+
+    lerpWidth();
+
+    function lerpWidth() {
+        currentWidth = lerp(currentWidth, expectedWidth, 0.05);
+        if (currentWidth < expectedWidth*0.999) {
+            setTimeout(lerpWidth, 10);
+        } else {
+            currentWidth = expectedWidth;
+        }
+        element.style.width = currentWidth + unit;
+    }
 }
 
-function createCardDiv(suit, value) {
+
+// adds cards from player's array of cards to div element
+function revealHand(deck) {
+    for (let i = 0; i < deck.length; i++) {
+        setTimeout(() => {
+            let card = deck[i];
+            if (isHidden(card)) {
+                showCard(card);
+            }
+        }, (i-1)*200);
+    }
+}
+
+
+// returns the location of the deck of cards relative to the window
+let deckLocation;
+function getDeckLocation() {
+    if (!deckLocation) {
+        const {top, bottom, left, right} = document.getElementById('deck').getBoundingClientRect();
+        deckLocation = {x: Math.round((left+right)/2.0), y: Math.round((top+bottom)/2.0)};
+    }
+    return deckLocation;
+}
+
+
+// creates a div element of a card with the given suit & value
+function createCardDiv(suit, value, hidden = false) {
     const asciiSuit = SUIT_CHARS[suit];
     const color = (suit === 'Spade' || suit === 'Club' ? 'BLACK' : 'RED');
 
     const cardDiv = document.createElement('div');
-    cardDiv.className = 'card';
+    cardDiv.className = (hidden ? 'card hidden' : 'card');
     cardDiv.style.color = color;
 
     const front = document.createElement('div');
@@ -335,6 +404,8 @@ function createCardDiv(suit, value) {
     return cardDiv;
 }
 
+
+// util function used to get the div containing all elements in the card
 function getCardFront(card) {
     if (!card.front) {
         card.front = card.element.getElementsByClassName('front')[0]
@@ -342,25 +413,195 @@ function getCardFront(card) {
     return card.front;
 }
 
+
+// flips the card to be face-down
 function hideCard(card) {
+    card = (card.element ? card.element : card);
     if (isShown(card) && !card.classList.contains('no-flip')) {
         getCardFront(card).className += ' hidden';
     }
 }
 
+
+// flips the card to be face-up
 function showCard(card) {
+    card = (card.element ? card.element : card);
     if (isHidden(card) && !card.classList.contains('no-flip')) {
         getCardFront(card).classList.remove('hidden');
     }
 }
 
+
+// returns true if the card is face-down
 function isHidden(card) {
+    card = (card.element ? card.element : card);
     return card.classList.contains('no-flip') || getCardFront(card).classList.contains('hidden');
 }
 
+
+// returns true if the card is face-up
 function isShown(card) {
+    card = (card.element ? card.element : card);
     return !isHidden(card);
 }
 
-// for now it's just text-based, I plan on adding graphics soon!
-// end of line, friend
+
+// returns {x, y} that an element should be updated to given the settings below
+function lerpMovement(element, to, lerpAlpha) {
+    const {top, bottom, left, right} = element.getBoundingClientRect();
+    const currentX = Math.round((left+right)/2.0);
+    const currentY = Math.round((top+bottom)/2.0);
+
+    const {x, y} = to;
+
+    const lerpX = lerp(currentX, x, lerpAlpha);
+    const lerpY = lerp(currentY, y, lerpAlpha);
+    
+    return {x: lerpX, y: lerpY};
+}
+
+
+setTimeout(() => {
+    loop();
+}, 1);
+
+let hit, stay, play;
+setTimeout(() => {
+    hit = document.getElementById('hitBtn');
+    stay = document.getElementById('stayBtn');
+    play = document.getElementById('playAgain');
+}, 5);
+
+function hitBtn() {
+    if (hit.style.opacity === '1') {
+        let val = calculateMaxValue(playerDeck);
+        if (val > 21) {
+            setSubtext('Reveal your new card before drawing another');
+        } else {
+            hideIfVisible(title);
+            hideIfVisible(subtext);
+            state = GameState.HIT;
+            loop();
+        }
+    }
+}
+function stayBtn() {
+    if (stay.style.opacity === '1') {
+        hideIfVisible(title, 350);
+        hideIfVisible(subtext, 350);
+        state = GameState.STAY;
+        loop();
+    }
+}
+function playAgain() {
+    if (play.style.opacity === '1') {
+        // reactivate buttons
+        hideElement(play, 250);
+        showElement(stay, 250);
+        showElement(hit, 250);
+
+        hideIfVisible(title, 350);
+        hideIfVisible(subtext, 350);
+
+        state = GameState.RESET;
+        updateDealerDeck();
+        updatePlayerDeck();
+        loop();
+    }
+}
+
+let title, subtext, playerScore, dealerScore;
+
+setTimeout(() => {
+    title = document.getElementById('title');
+    subtext = document.getElementById('subtext');
+    playerScore = document.getElementById('playerScore');
+    dealerScore = document.getElementById('dealerScore');
+}, 1);
+
+function setTitle(txt) {
+    title.textContent = txt;
+    showElement(title);
+}
+
+function setSubtext(txt, remainFor = 0) {
+    subtext.textContent = txt;
+    showElement(subtext);
+
+    if (remainFor) {
+        setTimeout(() => hideElement(subtext), remainFor);
+    }
+}
+
+function updateScores() {
+    playerScore.textContent = `Your wins: ${wins.player}`;
+    dealerScore.textContent = `Dealer's wins: ${wins.dealer}`;
+}
+
+// fades the element until it is invisible, over the given duration
+function hideElement(element, duration = 1000) {
+    const style = element.style;
+
+    if (element.tagName === 'BUTTON') { style.cursor = 'default'; }
+
+    for (let i = 100; i >= 0; i--) {
+        setTimeout(() => {
+            style.opacity = (i/100.0);
+        }, duration - (i*(duration/100.0)));
+    }
+}
+
+// fades the element until it is visible, over the given duration
+function showElement(element, duration = 1000) {
+    let style = element.style;
+
+    if (element.tagName === 'BUTTON') { setTimeout(() => style.cursor = 'pointer', duration); }
+
+    for (let i = 0; i <= 100; i++) {
+        setTimeout(() => {
+            style.opacity = (i/100.0);
+        }, i*(duration/100.0));
+    }
+}
+
+function hideIfVisible(element, duration = 1000) {
+    if (element.style.opacity === '1') {
+        hideElement(element, duration);
+    }
+}
+
+// card flipping
+addEventListener('mousedown', (event) => {
+    let card;
+
+    // only allow player to flip cards in their own hand
+    if (!document.getElementById('player').contains(event.target)) return;
+
+    if (event.target.classList.contains('card')) {
+        card = event.target;
+    } else if (event.target.classList.contains('front')) {
+        card = event.target.parentElement;
+    } else if (event.target.parentElement && event.target.parentElement.classList.contains('front')) {
+        card = event.target.parentElement.parentElement;
+    }
+
+    if (!card) return;
+
+    // hide title & subtext if they are still shown
+    if (state !== GameState.GAMEOVER) {
+        hideIfVisible(title);
+        hideIfVisible(subtext);
+    }
+
+    if (isHidden(card)) {
+        showCard(card);
+    } else {
+        hideCard(card);
+    }
+
+    if (state === GameState.IDLE && calculateMaxValue(playerDeck) > 21) {
+        state = GameState.STAY;
+        revealHand(playerDeck);
+        loop();
+    }
+});
