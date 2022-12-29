@@ -318,14 +318,15 @@ function animateWidth(element, expectedWidth = 100, unit = 'px') {
 
 
 // adds cards from player's array of cards to div element
-function revealHand(deck) {
+function revealHand(deck, duration = deck.length*200) {
+    const timeBetweenCards = duration / (deck.length-1);
     for (let i = 0; i < deck.length; i++) {
         setTimeout(() => {
             let card = deck[i];
             if (isHidden(card)) {
                 showCard(card);
             }
-        }, (i-1)*200);
+        }, (i-1)*timeBetweenCards);
     }
 }
 
@@ -496,6 +497,7 @@ function stayBtn() {
         hideIfVisible(subtext, 350);
         state = GameState.STAY;
         loop();
+        revealHand(playerDeck, 0);
     } else {
         playAgain();
     }
@@ -592,6 +594,18 @@ addEventListener('mousedown', (event) => {
                 hideCard(card);
             } else {
                 showCard(card);
+
+                // hide title & subtext if they are still shown
+                if (state === GameState.IDLE) {
+                    hideIfVisible(title);
+                    hideIfVisible(subtext);
+
+                    if (calculateMaxValue(playerDeck) > 21) {
+                        state = GameState.STAY;
+                        revealHand(playerDeck, 200);
+                        loop();
+                    }
+                }
             }
             return;
         }
