@@ -497,6 +497,7 @@ function stayBtn() {
         hideIfVisible(subtext, 350);
         state = GameState.STAY;
         loop();
+        revealHand(playerDeck, 0);
     } else {
         playAgain();
     }

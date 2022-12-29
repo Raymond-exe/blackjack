@@ -7,6 +7,7 @@ body {
     background-color: #222;
     text-align: center;
     overflow: hidden;
+    font-family: "PT Sans", sans-serif;
 }
 
 .announcement {
@@ -92,9 +93,6 @@ body {
 }
 
 @media screen and (orientation: landscape) {
-    body {
-        font-family: "PT Sans", sans-serif;
-    }
 
     .card {
         font-size: 2.5em;
