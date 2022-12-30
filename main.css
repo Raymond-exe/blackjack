@@ -76,9 +76,9 @@ body {
     .spotA4 { position: absolute; left: 0.00em; top: 2.0em; }
     .spotA5 { position: absolute; left: 0.00em; top: 3.0em; }
     .spotB1 { position: absolute; left: 0.85em; top: 0.0em; }
-    .spotB2 { position: absolute; left: 0.85em; top: 0.5em; }
+    .spotB2 { position: absolute; left: 0.85em; top: 0.75em; }
     .spotB3 { position: absolute; left: 0.85em; top: 1.5em; }
-    .spotB4 { position: absolute; left: 0.85em; top: 2.5em; }
+    .spotB4 { position: absolute; left: 0.85em; top: 2.25em; }
     .spotB5 { position: absolute; left: 0.85em; top: 3.0em; }
     .spotC1 { position: absolute; left: 1.70em; top: 0.0em; }
     .spotC2 { position: absolute; left: 1.70em; top: 1.0em; }
@@ -137,9 +137,9 @@ body {
     .spotA4 { position: absolute; left: 0.00em; top: 2.0em; }
     .spotA5 { position: absolute; left: 0.00em; top: 3.0em; }
     .spotB1 { position: absolute; left: 0.95em; top: 0.0em; }
-    .spotB2 { position: absolute; left: 0.95em; top: 0.5em; }
+    .spotB2 { position: absolute; left: 0.95em; top: 0.75em; }
     .spotB3 { position: absolute; left: 0.95em; top: 1.5em; }
-    .spotB4 { position: absolute; left: 0.95em; top: 2.5em; }
+    .spotB4 { position: absolute; left: 0.95em; top: 2.25em; }
     .spotB5 { position: absolute; left: 0.95em; top: 3.0em; }
     .spotC1 { position: absolute; left: 1.90em; top: 0.0em; }
     .spotC2 { position: absolute; left: 1.90em; top: 1.0em; }
