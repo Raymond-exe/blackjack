@@ -31,7 +31,7 @@ Originally, this was a text-based C++ project* written for a university course. 
 
 
 ### ***How does it work?***
-The general structure consists of a 5-setting* [state machine](https://en.wikipedia.org/wiki/Finite-state_machine) which adds cards to two arrays representing the player's hand and the dealer's hand respectively. The cards in each array are then evaluated and (if new cards are detected) added as HTML elements to the screen. The program allows players to click "HIT" until their hand's value exceeds 21, after which it becomes the dealer's turn to hit or stay. Aces are counted as 11's until the calculated value** exceeds 21, after which they are individually reduced in value to 1.
+The general structure consists of a 5-setting* [state machine](https://en.wikipedia.org/wiki/Finite-state_machine) which adds cards to two arrays representing the player's hand and the dealer's hand respectively. The cards in each array are then evaluated and (if new cards are detected) added as HTML elements to the screen. The program allows players to click "HIT" until their hand's value exceeds 21, after which it becomes the dealer's turn to hit or stay. Aces are counted as 11's until the hand's calculated value** exceeds 21, after which they are individually reduced in value to 1.
 ###### *There were originally 6 settings `[RESET, IDLE, HIT, STAY, GAMEOVER, LEAVE]`, but I figured out the web app wouldn't need the final state (`LEAVE`) allowing the original C++ program to exit.
 ###### **See the `calculateMaxValue()` function in [blackjack.js](https://github.com/Raymond-exe/blackjack/blob/master/blackjack.js).
 
