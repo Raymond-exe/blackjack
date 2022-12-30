@@ -38,6 +38,7 @@ body {
     .card {
         font-family: monospace, monospace;
         font-size: 2em;
+        transform: translateX(-25%);
     }
 
     #dealerScore {
