@@ -1,4 +1,4 @@
-## [> *Click here to play!* <](raymond-exe.github.io/blackjack)
+## [> *Click here to play!* <](https://raymond-exe.github.io/blackjack)
 
 # Simple Blackjack
 
