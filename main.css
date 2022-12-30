@@ -31,10 +31,6 @@ body {
 }
 
 @media screen and (orientation: portrait) {
-    body {
-        font-family: monospace, monospace;
-    }
-
     .card {
         font-family: monospace, monospace;
         font-size: 2em;
@@ -185,6 +181,7 @@ body {
     height: 5.5em;
     transition: transform 0.8s;
     transform-style: preserve-3d;
+    -webkit-perspective: 0;
     -webkit-backface-visibility: hidden; /* Safari */
     backface-visibility: hidden;
     margin: 0 auto; /* horizontal centering */
@@ -197,6 +194,7 @@ body {
     background-image: url('./images/back.png');
     image-rendering: pixelated;
     transform: rotateY(180deg);
+    -webkit-perspective: 0;
     -webkit-backface-visibility: hidden; /* Safari */
     backface-visibility: hidden;
     position: absolute;
