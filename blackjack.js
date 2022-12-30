@@ -398,11 +398,16 @@ function createCardDiv(suit, value, hidden = false) {
         return cardDiv;
     }
 
+    // added to ensure suit centering
+    const suitWrapper = document.createElement('div');
+    suitWrapper.classList = 'suit-wrapper';
+    front.appendChild(suitWrapper);
+
     for (spot of suitLayouts[value-1]) {
         const spotDiv = document.createElement('div');
         spotDiv.className = `spot${spot}`;
         spotDiv.textContent = asciiSuit;
-        front.appendChild(spotDiv);
+        suitWrapper.appendChild(spotDiv);
     }
 
     return cardDiv;
