@@ -40,7 +40,7 @@ The general structure consists of a 5-setting* [state machine](https://en.wikipe
 
 
 ### ***How long did this take?***
-The original text-based C++ program took roughly 2 hours. This rewrite was done entirely in the last 10 days of 2022. Most of my time on the rewrite was spent figuring out how to fix the graphics for mobile browsers :(
+The original text-based C++ program took roughly 2 hours. This rewrite was mostly done in the last 10 days of 2022, with the mobile site taking the first several days of 2023. Most of my time on the rewrite was spent figuring out how to fix the graphics for mobile browsers :(
 
 ---
 

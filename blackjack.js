@@ -13,15 +13,15 @@ const wins = {
 // array to specify which card values use which spots
 suitLayouts = [
     ['B3'], // A
-    ['B2', 'B4'], // 2
-    ['B1', 'B3', 'B5'], // 3
+    ['B1', 'B5'], // 2
+    ['B0', 'B3', 'B6'], // 3
     ['A1', 'A5', 'C1', 'C5'], // 4
     ['A1', 'A5', 'B3', 'C1', 'C5'], // 5
     ['A1', 'A3', 'A5', 'C1', 'C3', 'C5'], // 6
     ['A1', 'A3', 'A5', 'B2', 'C1', 'C3', 'C5'], // 7
     ['A1', 'A3', 'A5', 'B2', 'B4', 'C1', 'C3', 'C5'], // 8
     ['A1', 'A2', 'A4', 'A5', 'B3', 'C1', 'C2', 'C4', 'C5'], // 9
-    ['A1', 'A2', 'A4', 'A5', 'B2', 'B4', 'C1', 'C2', 'C4', 'C5'], // 10
+    ['A1', 'A2', 'A4', 'A5', 'B1', 'B5', 'C1', 'C2', 'C4', 'C5'], // 10
     [], // J
     [], // Q
     [], // K
@@ -381,33 +381,23 @@ function createCardDiv(suit, value, hidden = false) {
     front.appendChild(index2);
 
     if (value === 1 || value > 10) {
-        const aceSuit = document.createElement('div');
-        aceSuit.className = 'ace';
-        aceSuit.textContent = asciiSuit;
-        front.appendChild(aceSuit);
-        switch (value) { // TODO the face cards
-            case 1:
-                break;
-            case 11:
-                break;
-            case 12:
-                break;
-            case 13:
-                break;
-        }
+        const centered = document.createElement('div');
+        centered.className = 'centered-spot';
+        centered.textContent = asciiSuit;
+        front.appendChild(centered);
         return cardDiv;
-    }
+    } else {
+        // added to ensure suit centering
+        const suitWrapper = document.createElement('div');
+        suitWrapper.classList = 'suit-wrapper';
+        front.appendChild(suitWrapper);
 
-    // added to ensure suit centering
-    const suitWrapper = document.createElement('div');
-    suitWrapper.classList = 'suit-wrapper';
-    front.appendChild(suitWrapper);
-
-    for (spot of suitLayouts[value-1]) {
-        const spotDiv = document.createElement('div');
-        spotDiv.className = `spot${spot}`;
-        spotDiv.textContent = asciiSuit;
-        suitWrapper.appendChild(spotDiv);
+        for (let spot of suitLayouts[value-1]) {
+            const spotDiv = document.createElement('div');
+            spotDiv.className = `spot${spot}`;
+            spotDiv.textContent = asciiSuit;
+            suitWrapper.appendChild(spotDiv);
+        }
     }
 
     return cardDiv;

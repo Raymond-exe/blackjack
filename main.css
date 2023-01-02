@@ -68,10 +68,9 @@ body {
         bottom: 7.5em;
     }
 
-    .ace    { position: absolute; left: 0.525em; top: 0.75em; font-size: 200%; }
-    .jack   { position: absolute; }
-    .queen  { position: absolute; }
-    .king   { position: absolute; }
+    .suit-wrapper {
+        font-size: 90%;
+    }
 }
 
 @media screen and (orientation: landscape) {
@@ -110,11 +109,6 @@ body {
         cursor: default;
         bottom:6em;
     }
-
-    .ace    { position: absolute; left: 0.725em; top: 0.75em; font-size: 200%; }
-    .jack   { position: absolute; }
-    .queen  { position: absolute; }
-    .king   { position: absolute; }
 }
 
 .card-index {
@@ -154,7 +148,7 @@ body {
 
 .suit-wrapper {
     position: relative;
-    width: 2.5em;
+    width: 2.85em;
     height: 5em;
     left: 50%;
     top: 50%;
@@ -245,16 +239,20 @@ body {
 .spotA3 { position: absolute; left: 0; top: 50%; transform: translateY(-50%); }
 .spotA4 { position: absolute; left: 0; top: 63%; transform: translateY(-50%); }
 .spotA5 { position: absolute; left: 0; bottom: 0; }
-.spotB1 { position: absolute; left: 50%; top: 0%;  transform: translateX(-50%); }
-.spotB2 { position: absolute; left: 50%; top: 25%; transform: translateX(-50%) translateY(-50%); }
+.spotB1 { position: absolute; left: 50%; top: 0; transform: translateX(-50%); }
+.spotB1 { position: absolute; left: 50%; top: 25%; transform: translateX(-50%) translateY(-50%); }
+.spotB2 { position: absolute; left: 50%; top: 33%; transform: translateX(-50%) translateY(-50%); }
 .spotB3 { position: absolute; left: 50%; top: 50%; transform: translateX(-50%) translateY(-50%); }
-.spotB4 { position: absolute; left: 50%; top: 75%; transform: translateX(-50%) translateY(-50%); }
-.spotB5 { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); }
+.spotB4 { position: absolute; left: 50%; top: 66%; transform: translateX(-50%) translateY(-50%); }
+.spotB5 { position: absolute; left: 50%; top: 75%; transform: translateX(-50%) translateY(-50%); }
+.spotB6 { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); }
 .spotC1 { position: absolute; right: 0; top: 0; }
 .spotC2 { position: absolute; right: 0; top: 37%; transform: translateY(-50%); }
 .spotC3 { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
 .spotC4 { position: absolute; right: 0; top: 63%; transform: translateY(-50%); }
 .spotC5 { position: absolute; right: 0; bottom: 0; }
+
+.centered-spot { position: absolute; left: 50%; top: 50%; transform: translateX(-50%) translateY(-50%); font-size: 200%;}
 
 /* Stole this CSS button from Duolingo lol */
 /* See: https://getcssscan.com/css-buttons-examples */
