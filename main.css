@@ -68,24 +68,6 @@ body {
         bottom: 7.5em;
     }
 
-    /* card symbol spots */
-    /* for more info see http://www.brainjar.com/css/cards */
-    .spotA1 { position: absolute; left: 0.00em; top: 0.0em; }
-    .spotA2 { position: absolute; left: 0.00em; top: 1.0em; }
-    .spotA3 { position: absolute; left: 0.00em; top: 1.5em; }
-    .spotA4 { position: absolute; left: 0.00em; top: 2.0em; }
-    .spotA5 { position: absolute; left: 0.00em; top: 3.0em; }
-    .spotB1 { position: absolute; left: 0.85em; top: 0.0em; }
-    .spotB2 { position: absolute; left: 0.85em; top: 0.75em; }
-    .spotB3 { position: absolute; left: 0.85em; top: 1.5em; }
-    .spotB4 { position: absolute; left: 0.85em; top: 2.25em; }
-    .spotB5 { position: absolute; left: 0.85em; top: 3.0em; }
-    .spotC1 { position: absolute; left: 1.70em; top: 0.0em; }
-    .spotC2 { position: absolute; left: 1.70em; top: 1.0em; }
-    .spotC3 { position: absolute; left: 1.70em; top: 1.5em; }
-    .spotC4 { position: absolute; left: 1.70em; top: 2.0em; }
-    .spotC5 { position: absolute; left: 1.70em; top: 3.0em; }
-
     .ace    { position: absolute; left: 0.525em; top: 0.75em; font-size: 200%; }
     .jack   { position: absolute; }
     .queen  { position: absolute; }
@@ -128,24 +110,6 @@ body {
         cursor: default;
         bottom:6em;
     }
-
-    /* card symbol spots */
-    /* for more info see http://www.brainjar.com/css/cards */
-    .spotA1 { position: absolute; left: 0.00em; top: 0.0em; }
-    .spotA2 { position: absolute; left: 0.00em; top: 1.0em; }
-    .spotA3 { position: absolute; left: 0.00em; top: 1.5em; }
-    .spotA4 { position: absolute; left: 0.00em; top: 2.0em; }
-    .spotA5 { position: absolute; left: 0.00em; top: 3.0em; }
-    .spotB1 { position: absolute; left: 0.95em; top: 0.0em; }
-    .spotB2 { position: absolute; left: 0.95em; top: 0.75em; }
-    .spotB3 { position: absolute; left: 0.95em; top: 1.5em; }
-    .spotB4 { position: absolute; left: 0.95em; top: 2.25em; }
-    .spotB5 { position: absolute; left: 0.95em; top: 3.0em; }
-    .spotC1 { position: absolute; left: 1.90em; top: 0.0em; }
-    .spotC2 { position: absolute; left: 1.90em; top: 1.0em; }
-    .spotC3 { position: absolute; left: 1.90em; top: 1.5em; }
-    .spotC4 { position: absolute; left: 1.90em; top: 2.0em; }
-    .spotC5 { position: absolute; left: 1.90em; top: 3.0em; }
 
     .ace    { position: absolute; left: 0.725em; top: 0.75em; font-size: 200%; }
     .jack   { position: absolute; }
@@ -190,13 +154,11 @@ body {
 
 .suit-wrapper {
     position: relative;
-    width: 2.7em;
-    height: 4.2em;
-    display: inline-block;
-    /* left: 50%; */
+    width: 2.5em;
+    height: 5em;
+    left: 50%;
     top: 50%;
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
 }
 
 .cardback {
@@ -205,6 +167,7 @@ body {
     background-image: url('./images/back.png');
     image-rendering: pixelated;
     transform: rotateY(180deg);
+    transform-style: preserve-3d;
     -webkit-perspective: 0;
     -webkit-backface-visibility: hidden; /* Safari */
     backface-visibility: hidden;
@@ -274,6 +237,24 @@ body {
     bottom: 0px;
     left: 0px;
 }
+
+/* card symbol spots */
+/* for more info see http://www.brainjar.com/css/cards */
+.spotA1 { position: absolute; left: 0; top: 0; }
+.spotA2 { position: absolute; left: 0; top: 37%; transform: translateY(-50%); }
+.spotA3 { position: absolute; left: 0; top: 50%; transform: translateY(-50%); }
+.spotA4 { position: absolute; left: 0; top: 63%; transform: translateY(-50%); }
+.spotA5 { position: absolute; left: 0; bottom: 0; }
+.spotB1 { position: absolute; left: 50%; top: 0%;  transform: translateX(-50%); }
+.spotB2 { position: absolute; left: 50%; top: 25%; transform: translateX(-50%) translateY(-50%); }
+.spotB3 { position: absolute; left: 50%; top: 50%; transform: translateX(-50%) translateY(-50%); }
+.spotB4 { position: absolute; left: 50%; top: 75%; transform: translateX(-50%) translateY(-50%); }
+.spotB5 { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); }
+.spotC1 { position: absolute; right: 0; top: 0; }
+.spotC2 { position: absolute; right: 0; top: 37%; transform: translateY(-50%); }
+.spotC3 { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
+.spotC4 { position: absolute; right: 0; top: 63%; transform: translateY(-50%); }
+.spotC5 { position: absolute; right: 0; bottom: 0; }
 
 /* Stole this CSS button from Duolingo lol */
 /* See: https://getcssscan.com/css-buttons-examples */
