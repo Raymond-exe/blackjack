@@ -476,7 +476,7 @@ function hitBtn() {
         let val = calculateMaxValue(playerDeck);
         if (val > 21) {
             setSubtext('Reveal your new card before drawing another');
-        } else if (state === GameState.HIT) {
+        } else if (state === GameState.IDLE) {
             hideIfVisible(title);
             hideIfVisible(subtext);
             state = GameState.HIT;
