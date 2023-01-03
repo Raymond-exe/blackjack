@@ -476,7 +476,7 @@ function hitBtn() {
         let val = calculateMaxValue(playerDeck);
         if (val > 21) {
             setSubtext('Reveal your new card before drawing another');
-        } else {
+        } else if (state === GameState.HIT) {
             hideIfVisible(title);
             hideIfVisible(subtext);
             state = GameState.HIT;
@@ -576,8 +576,11 @@ function isLandscape() {
     return window.innerHeight < window.innerWidth;
 }
 
+addEventListener('mousedown', handleInteraction);
+addEventListener('touchend', handleInteraction);
+
 // card flipping
-addEventListener('mousedown', (event) => {
+function handleInteraction(event) {
     for (let i = playerDeck.length-1; i >= 0; i--) {
         let card = playerDeck[i];
         const bounds = getCardFront(card.element).getBoundingClientRect();
@@ -605,4 +608,4 @@ addEventListener('mousedown', (event) => {
             return;
         }
     }
-});
+}
