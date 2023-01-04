@@ -608,6 +608,9 @@ function hideIfVisible(element, duration = 1000) {
     if (element.style.opacity === '1') {
         hideElement(element, duration);
     }
+    if (element === help) {
+        setTimeout(() => help.remove(), duration);
+    }
 }
 
 function isLandscape() {
