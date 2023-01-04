@@ -1,6 +1,5 @@
 /* resources used: */
 /* CSS playing cards: http://www.brainjar.com/css/cards */
-/* SVG face card designs: edited from https://tekeye.uk/playing_cards/svg-playing-cards */
 /* card flipping: https://www.w3schools.com/howto/howto_css_flip_card.asp */
 
 body {
@@ -137,9 +136,10 @@ body {
     position: relative;
     width: 4em;
     height: 5.5em;
+    -webkit-transition: -webkit-transform 0.8s;
     transition: transform 0.8s;
+    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
-    -webkit-perspective: 0;
     -webkit-backface-visibility: hidden; /* Safari */
     backface-visibility: hidden;
     margin: 0 auto; /* horizontal centering */
@@ -160,9 +160,10 @@ body {
     background-color: #fff;
     background-image: url('./images/back.png');
     image-rendering: pixelated;
+    -webkit-transform: rotateY(180deg);
     transform: rotateY(180deg);
+    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
-    -webkit-perspective: 0;
     -webkit-backface-visibility: hidden; /* Safari */
     backface-visibility: hidden;
     position: absolute;
@@ -175,7 +176,8 @@ body {
 }
 
 .hidden {
-    transform: rotateY(180deg)
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
 }
 
 .no-flip {
@@ -230,6 +232,10 @@ body {
     position: fixed;
     bottom: 0px;
     left: 0px;
+}
+
+.shadow-text {
+    text-shadow: 0 0 8px #FFF;
 }
 
 /* card symbol spots */

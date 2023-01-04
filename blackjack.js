@@ -472,14 +472,22 @@ setTimeout(() => {
     help = document.getElementById('helpBtn');
 }, 5);
 
+let firstInteraction = true;
+
 function hitBtn() {
+    if (isPlayerHandHidden() && firstInteraction) {
+        flashSubtext(3, 150);
+        return;
+    }
     if (hit.style.opacity === '1') {
         let val = calculateMaxValue(playerDeck);
+        firstInteraction = false;
         if (val > 21) {
             setSubtext('Reveal your new card before drawing another');
         } else if (state === GameState.IDLE) {
             hideIfVisible(title);
             hideIfVisible(subtext);
+            hideIfVisible(help);
             state = GameState.HIT;
             loop();
         }
@@ -488,9 +496,15 @@ function hitBtn() {
     }
 }
 function stayBtn() {
-    if (stay.style.opacity === '1') {
+    if (isPlayerHandHidden() && firstInteraction) {
+        flashSubtext(3, 150);
+        return;
+    }
+    if (stay.style.opacity === '1' && state === GameState.IDLE) {
+        firstInteraction = false;
         hideIfVisible(title, 350);
         hideIfVisible(subtext, 350);
+        hideIfVisible(help);
         state = GameState.STAY;
         loop();
         revealHand(playerDeck, 0);
@@ -516,6 +530,15 @@ function helpBtn() {
     window.open('https://github.com/Raymond-exe/blackjack#how-do-i-play');
 }
 
+function isPlayerHandHidden() {
+    for (let card of playerDeck) {
+        if (isShown(card)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 let title, subtext, playerScore, dealerScore;
 
 setTimeout(() => {
@@ -536,6 +559,17 @@ function setSubtext(txt, remainFor = 0) {
 
     if (remainFor) {
         setTimeout(() => hideElement(subtext), remainFor);
+    }
+}
+
+function flashSubtext(flashes, freq, alternateColor) {
+    const defaultClasses = `${subtext.classList}`;
+    const copy = defaultClasses + ' shadow-text';
+    for (let i = 0; i < flashes*2; i++) {
+        setTimeout(() => {
+            subtext.classList = (i%2 === 1 ? defaultClasses : copy);
+            console.log(subtext.classList);
+        }, i*freq);
     }
 }
 
@@ -591,7 +625,8 @@ function handleInteraction(event) {
         if (
             (event.clientX > bounds.left && event.clientX < bounds.right) &&
             (event.clientY > bounds.top && event.clientY < bounds.bottom)
-        ) {
+            ) {
+            firstInteraction = false;
             if (isShown(card)) {
                 hideCard(card);
             } else {
@@ -601,6 +636,7 @@ function handleInteraction(event) {
                 if (state === GameState.IDLE) {
                     hideIfVisible(title);
                     hideIfVisible(subtext);
+                    hideIfVisible(help);
 
                     if (calculateMaxValue(playerDeck) > 21) {
                         state = GameState.STAY;
