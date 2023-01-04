@@ -565,10 +565,12 @@ function setSubtext(txt, remainFor = 0) {
 function flashSubtext(flashes, freq, alternateColor) {
     const defaultClasses = `${subtext.classList}`;
     const copy = defaultClasses + ' shadow-text';
+
+    if (defaultClasses.includes('shadow-text')) return;
+
     for (let i = 0; i < flashes*2; i++) {
         setTimeout(() => {
             subtext.classList = (i%2 === 1 ? defaultClasses : copy);
-            console.log(subtext.classList);
         }, i*freq);
     }
 }
