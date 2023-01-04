@@ -464,11 +464,12 @@ setTimeout(() => {
     loop();
 }, 1);
 
-let hit, stay, play;
+let hit, stay, play, help;
 setTimeout(() => {
     hit = document.getElementById('hitBtn');
     stay = document.getElementById('stayBtn');
     play = document.getElementById('playAgain');
+    help = document.getElementById('helpBtn');
 }, 5);
 
 function hitBtn() {
@@ -510,6 +511,9 @@ function playAgain() {
         state = GameState.RESET;
         loop();
     }
+}
+function helpBtn() {
+    window.open('https://github.com/Raymond-exe/blackjack#how-do-i-play');
 }
 
 let title, subtext, playerScore, dealerScore;
