@@ -2,12 +2,12 @@
 
 # Simple Blackjack
 
-> A Blackjack web application written with JavaScript, HTML and CSS. All graphics displayed are made with HTML elements (mostly divs and buttons).
+> A Blackjack web application written with JavaScript, HTML and CSS. All on-screen graphics were made with HTML elements (mostly divs and buttons).
 
 
 
 ### ***How do I play?***
-In Blackjack, players compete against the dealer to attain the highest-valued deck without exceeding 21. Players start with 2 cards and may draw cards from the deck (known as "hit"). The first card in the dealer's hand is revealed to the player, with the cards following it remaining hidden until the end of the player's turn.
+In Blackjack, players compete against the dealer to attain the highest-valued hand without exceeding 21. Players start with 2 cards and may draw cards from the deck (known as "hit"). The first card in the dealer's hand is revealed to the player, with the cards following it remaining hidden until the end of the player's turn.
 
 Numbered cards are valued according to their number, face cards have the value of 10, and Aces may be valued as 11 or 1 (up to the player).
 
@@ -31,7 +31,7 @@ Originally, this was a text-based C++ project* written for a university course. 
 
 
 ### ***How does it work?***
-The general structure consists of a 5-setting* [state machine](https://en.wikipedia.org/wiki/Finite-state_machine) which adds cards to two arrays representing the player's hand and the dealer's hand respectively. The cards in each array are then evaluated and (if new cards are detected) added as HTML elements to the screen. The program allows players to click "HIT" until their hand's value exceeds 21, after which it becomes the dealer's turn to hit or stay. Aces are counted as 11's until the hand's calculated value** exceeds 21, after which they are individually reduced in value to 1.
+The general structure consists of a 5-setting* [state machine](https://en.wikipedia.org/wiki/Finite-state_machine) which manages cards in two arrays representing both the player's hand and the dealer's hand respectively. The cards in each array are then evaluated and (if new cards are detected) added as HTML elements to the screen. The program allows players to click "HIT" until their hand's value exceeds 21, after which it becomes the dealer's turn to add cards to their own hand. Aces are counted as 11's until the hand's calculated value** exceeds 21, after which they are individually reduced in value to 1.
 ###### *There were originally 6 settings `[RESET, IDLE, HIT, STAY, GAMEOVER, LEAVE]`, but I figured out the web app wouldn't need the final state (`LEAVE`) allowing the original C++ program to exit.
 ###### **See the `calculateMaxValue()` function in [blackjack.js](https://github.com/Raymond-exe/blackjack/blob/master/blackjack.js).
 
@@ -40,7 +40,7 @@ The general structure consists of a 5-setting* [state machine](https://en.wikipe
 
 
 ### ***How long did this take?***
-The original text-based C++ program took roughly 2 hours. This rewrite was mostly done in the last 10 days of 2022, with the mobile site taking the first several days of 2023. Most of my time on the rewrite was spent figuring out how to fix the graphics for mobile browsers :(
+The original text-based C++ program took roughly 2 hours. This rewrite was mostly done in the last 10 days of 2022, with the mobile site taking the first several days of the next year. Most of my time on the rewrite was spent figuring out how to fix the graphics for mobile browsers :(
 
 ---
 
@@ -48,3 +48,11 @@ The original text-based C++ program took roughly 2 hours. This rewrite was mostl
 
 ### ***Will there be any future updates to this project?***
 Probably not, as this project was intended to be a much smaller side-project to temporarily occupy my time. Anybody is free to fork this repo to build on top of it if they would like to.
+
+---
+
+
+
+### *Helpful resources*
+* BrainJar - [CSS card designs](http://www.brainjar.com/css/cards)
+* W3 Schools - [Flipping elements with CSS](https://www.w3schools.com/howto/howto_css_flip_card.asp)
