@@ -617,18 +617,24 @@ function isLandscape() {
     return window.innerHeight < window.innerWidth;
 }
 
+function eventIsInElement(event, element) {
+    const bounds = element.getBoundingClientRect();
+    return (event.clientX > bounds.left && event.clientX < bounds.right) &&
+           (event.clientY > bounds.top && event.clientY < bounds.bottom);
+}
+
 addEventListener('mousedown', handleInteraction);
 addEventListener('touchend', handleInteraction);
 
 // card flipping
 function handleInteraction(event) {
+    if (eventIsInElement(event, help)) {
+        return; // cancels this triggering when user clicks help button
+    }
+
     for (let i = playerDeck.length-1; i >= 0; i--) {
         let card = playerDeck[i];
-        const bounds = getCardFront(card.element).getBoundingClientRect();
-        if (
-            (event.clientX > bounds.left && event.clientX < bounds.right) &&
-            (event.clientY > bounds.top && event.clientY < bounds.bottom)
-            ) {
+        if (eventIsInElement(event, getCardFront(card.element))) {
             firstInteraction = false;
             if (isShown(card)) {
                 hideCard(card);
