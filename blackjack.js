@@ -634,8 +634,10 @@ addEventListener('touchstart', (event) => {
 });
 
 // card flipping
+let filter = 'unassigned';
 function handleInteraction(event) {
-    if (event.type === 'touchstart') return;
+    if (filter === 'unassigned') filter = event.type;
+    else if (event.type !== filter) return;
     if (eventIsInElement(event, help)) {
         return; // cancels this triggering when user clicks help button
     }
