@@ -626,7 +626,7 @@ function eventIsInElement(event, element) {
 }
 
 addEventListener('mousedown', handleInteraction);
-addEventListener('touchend', (event) => {
+addEventListener('touchstart', (event) => {
     const touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
     event.clientX = touch.pageX;
     event.clientY = touch.pageY;
