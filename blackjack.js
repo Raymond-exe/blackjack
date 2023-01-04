@@ -626,7 +626,12 @@ function eventIsInElement(event, element) {
 }
 
 addEventListener('mousedown', handleInteraction);
-addEventListener('touchend', handleInteraction);
+addEventListener('touchend', (event) => {
+    const touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+    event.clientX = touch.pageX;
+    event.clientY = touch.pageY;
+    handleInteraction(event);
+})
 
 // card flipping
 function handleInteraction(event) {
