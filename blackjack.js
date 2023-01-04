@@ -625,13 +625,8 @@ function eventIsInElement(event, element) {
            (event.clientY > bounds.top && event.clientY < bounds.bottom);
 }
 
-let touchscreen = false;
 addEventListener('mousedown', handleInteraction);
 addEventListener('touchstart', (event) => {
-    if (!touchscreen) {
-        removeEventListener('mousedown', handleInteraction);
-        touchscreen = true;
-    }
     const touch = event.touches[0] || event.changedTouches[0];
     event.clientX = touch.pageX;
     event.clientY = touch.pageY;
@@ -640,6 +635,7 @@ addEventListener('touchstart', (event) => {
 
 // card flipping
 function handleInteraction(event) {
+    if (event.type === 'touchstart') return;
     if (eventIsInElement(event, help)) {
         return; // cancels this triggering when user clicks help button
     }
