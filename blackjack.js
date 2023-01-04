@@ -625,13 +625,18 @@ function eventIsInElement(event, element) {
            (event.clientY > bounds.top && event.clientY < bounds.bottom);
 }
 
+let touchscreen = false;
 addEventListener('mousedown', handleInteraction);
 addEventListener('touchstart', (event) => {
-    const touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+    if (!touchscreen) {
+        removeEventListener('mousedown', handleInteraction);
+        touchscreen = true;
+    }
+    const touch = event.touches[0] || event.changedTouches[0];
     event.clientX = touch.pageX;
     event.clientY = touch.pageY;
     handleInteraction(event);
-})
+});
 
 // card flipping
 function handleInteraction(event) {
